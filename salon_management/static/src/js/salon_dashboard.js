@@ -109,8 +109,8 @@ export class SalonDashboard extends Component {
             name: _t("Chair Orders"),
             type: 'ir.actions.act_window',
             res_model: 'salon.order',
-            view_mode: 'kanban,list,form',
-            views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
+            view_mode: 'gantt,kanban,list,form',
+            views: [[false, 'gantt'],[false, 'kanban'], [false, 'list'], [false, 'form']],
             domain: [['chair_id', '=', parseInt(active_id)]],
             context: {
                 default_chair_id: parseInt(active_id)
