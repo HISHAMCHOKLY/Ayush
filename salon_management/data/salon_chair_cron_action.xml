@@ -6,12 +6,11 @@
             <field name="name">Collection Today</field>
             <field eval="True" name="active"/>
             <field name="model_id" ref="salon_management.model_salon_chair"/>
+            <field name="state">code</field>
             <field name="code">model.collection_today_updater()</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field eval="True" name="doall"/>
         </record>
     </data>
 </odoo>

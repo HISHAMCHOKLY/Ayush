@@ -2,8 +2,8 @@
 ################################################################################
 #
 #    Cybrosys Technologies Pvt. Ltd.
-#    Copyright (C) 2023-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
-#    Author: Mohammed Dilshad Tk (odoo@cybrosys.com)
+#    Copyright (C) 2025-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
+#    Author: Abbas P (odoo@cybrosys.com)
 #
 #    This program is free software: you can modify
 #    it under the terms of the GNU Affero General Public License (AGPL) as
@@ -31,14 +31,10 @@ class SalonBookingWeb(http.Controller):
 
     @http.route(route='/page/salon_details', type='json', auth='public',
                 website=True, csrf=False)
-    def salon_details(self, name, date, salon_time, phone, email, chair, number, list_service):
-        service_lists = [service['item'] for service in list_service]
+    def salon_details(self, name, date, salon_time, phone, email, chair,
+                      service_list):
         dates_time = date + " " + salon_time + ":00"
-        user_tz = request.env.user.tz or 'UTC'
-        if isinstance(user_tz, bool):
-            user_tz = 'UTC'
-        local_tz = pytz.timezone(user_tz)
-        date_and_time = (local_tz.localize(
+        date_and_time = (pytz.timezone(request.env.user.tz).localize(
             datetime.strptime(str(dates_time), '%Y-%m-%d %H:%M:%S')).
                          astimezone(pytz.UTC).replace(tzinfo=None))
         a = request.env['salon.booking'].create({
@@ -48,23 +44,19 @@ class SalonBookingWeb(http.Controller):
             'email': email,
             'chair_id': chair,
             'service_ids': [(6, 0, [salon.id for salon in request.env
-            ['salon.service'].search([('id', 'in', service_lists)])])],
+                                    ['salon.service'].search([('id', 'in',
+                                                             service_list)])])],
         })
-
         return json.dumps({'result': True})
 
     @http.route('/page/salon_check_date', type='json', auth="public",
                 website=True)
     def salon_check(self, **kwargs):
         year, month, day = map(int, kwargs['check_date'].split('-'))
-        user_tz = request.env.user.tz or 'UTC'
-        if isinstance(user_tz, bool):
-            user_tz = 'UTC'  # Ensure it's a string
-        local_tz = pytz.timezone(user_tz)
-        date_start = local_tz.localize(
+        date_start = pytz.timezone(request.env.user.tz).localize(
             datetime(year, month, day, hour=0, minute=0, second=0)).astimezone(
             pytz.UTC).replace(tzinfo=None)
-        date_end = (local_tz.
+        date_end = (pytz.timezone(request.env.user.tz).
                     localize(datetime(year, month, day, hour=23, minute=59,
                                       second=59)).astimezone(pytz.UTC).
                     replace(tzinfo=None))
@@ -77,9 +69,11 @@ class SalonBookingWeb(http.Controller):
             data = {
                 'number': order.id,
                 'start_time_only': fields.Datetime.to_string(pytz.UTC.localize(
-                    order.start_time).astimezone(local_tz).replace(tzinfo=None))[11:16],
+                    order.start_time).astimezone(pytz.timezone(
+                                    request.env.user.tz)).replace(tzinfo=None))[11:16],
                 'end_time_only': fields.Datetime.to_string(pytz.UTC.localize(
-                    order.end_time).astimezone(local_tz).replace(tzinfo=None))[11:16],
+                    order.end_time).astimezone(pytz.timezone(
+                                    request.env.user.tz)).replace(tzinfo=None))[11:16],
             }
             if order.chair_id.id not in order_details:
                 order_details[order.chair_id.id] = {
@@ -100,28 +94,25 @@ class SalonBookingWeb(http.Controller):
     def chair_info(self, **post):
         """Route function that render while clicking Booking menu from website.
            Returns data to booking website"""
-        salon_service_obj = request.env['salon.service'].search([])
-        salon_working_hours_obj = request.env['salon.working.hours'].search([])
-        salon_holiday_obj = request.env['salon.holiday'].search(
+        salon_service_obj = request.env['salon.service'].sudo().search([])
+        salon_working_hours_obj = request.env['salon.working.hours'].sudo().search([])
+        salon_holiday_obj = request.env['salon.holiday'].sudo().search(
             [('holiday', '=', True)])
         date_check = datetime.today().date()
-        user_tz = request.env.user.tz or 'UTC'
-        if isinstance(user_tz, bool):
-            user_tz = 'UTC'  # Ensure it's a string
-        local_tz = pytz.timezone(user_tz)
-        date_start = local_tz.localize(datetime.combine(date_check, time(hour=0, minute=0, second=0))).astimezone(
-            pytz.UTC).replace(tzinfo=None)
-        date_end = (local_tz.localize(
+        date_start = (pytz.timezone(request.env.user.tz).localize(
+            datetime.combine(date_check, time(hour=0, minute=0, second=0))).
+                      astimezone(pytz.UTC).replace(tzinfo=None))
+        date_end = (pytz.timezone(request.env.user.tz).localize(
             datetime.combine(date_check, time(hour=23, minute=59, second=59))).
                     astimezone(pytz.UTC).replace(tzinfo=None))
         # chair_obj =
-        order_obj = request.env['salon.order'].search(
+        order_obj = request.env['salon.order'].sudo().search(
             [('chair_id.active_booking_chairs', '=', True),
              ('stage_id', 'in', [1, 2, 3]), ('start_time', '>=', date_start),
              ('start_time', '<=', date_end)])
         return request.render(
             'salon_management.salon_booking_form', {
-                'chair_details': request.env['salon.chair'].search([]),
+                'chair_details': request.env['salon.chair'].sudo().search([]),
                 'order_details': order_obj,
                 'salon_services': salon_service_obj,
                 'date_search': date_check,

@@ -5,16 +5,35 @@
         <field name="name">salon.order.view.tree</field>
         <field name="model">salon.order</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="chair_id"/>
                 <field name="start_time"/>
                 <field name="end_time"/>
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
                 <field name="time_taken_total" widget="float_time"/>
                 <field name="price_subtotal" widget="monetary"/>
                 <field name="stage_id"/>
-            </tree>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_salon_order_gantt" model="ir.ui.view">
+        <field name="name">salon.order.gantt</field>
+        <field name="model">salon.order</field>
+        <field name="arch" type="xml">
+            <gantt string="Salon Orders"
+                   date_start="start_time"
+                   date_stop="end_time"
+                   progress="time_taken_total"
+                   default_group_by="chair_id"
+                   color="color"
+                   create="false">
+                <field name="chair_id"/>
+                <field name="partner_id"/>
+                <field name="start_time"/>
+                <field name="end_time"/>
+            </gantt>
         </field>
     </record>
     <!-- Salon order view kanban-->
@@ -158,7 +177,7 @@
                     </group>
                     <notebook>
                         <page string="Order Lines">
-                            <field name="order_line_ids" mode="tree,kanban"
+                            <field name="order_line_ids" mode="list,kanban"
                                    readonly="stage_id != 1">
                                 <form string="Salon Order Lines">
                                     <group>
@@ -172,17 +191,17 @@
                                         </group>
                                     </group>
                                 </form>
-                                <tree string="Salon Order Lines"
+                                <list string="Salon Order Lines"
                                       editable="bottom">
                                     <field name="service_id"/>
                                     <field name="time_taken"
                                            widget="float_time"/>
                                     <field name="currency_id"
-                                           invisible="1"/>
+                                           column_invisible="1"/>
                                     <field name="price" widget="monetary"/>
                                     <field name="price_subtotal"
                                            widget="monetary"/>
-                                </tree>
+                                </list>
                                 <kanban class="o_kanban_mobile">
                                     <field name="service_id"/>
                                     <field name="time_taken"/>
@@ -244,7 +263,7 @@
     <record id="salon_order_action" model="ir.actions.act_window">
         <field name="name">Salon Orders</field>
         <field name="res_model">salon.order</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">gantt,kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No data yet!
@@ -257,7 +276,7 @@
             model="ir.actions.act_window">
         <field name="name">Salon Orders</field>
         <field name="res_model">salon.order</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">gantt,kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Booking!

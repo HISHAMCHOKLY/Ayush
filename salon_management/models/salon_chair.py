@@ -2,8 +2,8 @@
 ################################################################################
 #
 #    Cybrosys Technologies Pvt. Ltd.
-#    Copyright (C) 2023-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
-#    Author: Mohammed Dilshad Tk (odoo@cybrosys.com)
+#    Copyright (C) 2025-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
+#    Author: Abbas P (odoo@cybrosys.com)
 #
 #    This program is free software: you can modify
 #    it under the terms of the GNU Affero General Public License (AGPL) as
@@ -38,7 +38,7 @@ class SalonChair(models.Model):
         help="You can select the user from the Users Tab"
              "Last user from the Users Tab will be selected "
              "as the Current User.")
-    date = fields.Datetime(string="Date", help="Chair available date")
+    date = fields.Datetime(string="Date", help="Chair available date", required=True)
     user_line = fields.One2many('salon.chair.user', 'salon_chair_id',
                                 string="Users", help="Salon chair users")
     total_time_taken_chair = fields.Float(string="Time Reserved(Hrs)",

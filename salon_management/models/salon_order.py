@@ -2,8 +2,8 @@
 ################################################################################
 #
 #    Cybrosys Technologies Pvt. Ltd.
-#    Copyright (C) 2023-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
-#    Author: Mohammed Dilshad Tk (odoo@cybrosys.com)
+#    Copyright (C) 2025-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
+#    Author: Abbas P (odoo@cybrosys.com)
 #
 #    This program is free software: you can modify
 #    it under the terms of the GNU Affero General Public License (AGPL) as
@@ -65,7 +65,7 @@ class SalonOrder(models.Model):
                                      string="Order Lines", copy=True,
                                      help='Salon order line for add '
                                           'list of services', required=True)
-    stage_id = fields.Many2one(comodel_name='salon.stage', string="Stages",
+    stage_id = fields.Many2one(comodel_name='salon.stage', string="State",
                                group_expand='_read_group_stage_ids', default=1,
                                copy=False, help="state for the salon order(user"
                                                 " can add dynamic state from"
@@ -116,11 +116,11 @@ class SalonOrder(models.Model):
                 'domain': [('invoice_origin', '=', self.name)],
                 'res_model': 'account.move',
                 'view_id': False,
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
                 'type': 'ir.actions.act_window'}
 
     @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
+    def _read_group_stage_ids(self, stages, domain):
         """Return the stages to stage_ids"""
         return self.env['salon.stage'].search([])
 

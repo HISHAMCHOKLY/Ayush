@@ -207,7 +207,7 @@ article {
     height: 200px;
     width: 100%;
 }
-.salon_chair:hover {
+.salon_chair {
     -webkit-filter: drop-shadow(0px 4px 4px #3e3e3e);
     filter: drop-shadow(0px 4px 4px #373737);
 }

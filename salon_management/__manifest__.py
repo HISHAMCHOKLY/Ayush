@@ -2,8 +2,8 @@
 ################################################################################
 #
 #    Cybrosys Technologies Pvt. Ltd.
-#    Copyright (C) 2023-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
-#    Author: Mohammed Dilshad Tk (odoo@cybrosys.com)
+#    Copyright (C) 2025-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
+#    Author: Abbas P (odoo@cybrosys.com)
 #
 #    This program is free software: you can modify
 #    it under the terms of the GNU Affero General Public License (AGPL) as
@@ -21,7 +21,7 @@
 ################################################################################
 {
     'name': 'Beauty Spa Management',
-    'version': '17.0.1.1.1',
+    'version': '18.0.1.0.0',
     "category": "Services",
     'summary': 'Beauty Parlour Management with Online Booking System',
     'description': 'This module to helps your customers to do the online '
@@ -35,11 +35,6 @@
     'data': [
         'security/salon_management_groups.xml',
         'security/ir.model.access.csv',
-        'data/product_template_data.xml',
-        'data/res_partner_data.xml',
-        'data/salon_holiday_data.xml',
-        'data/salon_stages_data.xml',
-        'data/salon_working_hours_data.xml',
         'data/salon_website_menu.xml',
         'data/salon_chair_cron_action.xml',
         'data/salon_management_mail_template.xml',
@@ -56,6 +51,13 @@
         'views/salon_order_views.xml',
         'views/salon_management_menus.xml',
     ],
+    'demo': [
+        'data/product_template_data.xml',
+        'data/res_partner_data.xml',
+        'data/salon_holiday_data.xml',
+        'data/salon_stages_data.xml',
+        'data/salon_working_hours_data.xml',
+    ],
     'assets': {
         'web.assets_backend': [
             'salon_management/static/src/css/salon_dashboard.css',
@@ -67,7 +69,7 @@
             'salon_management/static/src/js/website_salon_booking.js',
         ],
     },
-    'images': ['static/description/banner.png'],
+    'images': ['static/description/banner.jpg'],
     'license': 'AGPL-3',
     'installable': True,
     'auto_install': False,

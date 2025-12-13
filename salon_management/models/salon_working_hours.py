@@ -2,8 +2,8 @@
 ################################################################################
 #
 #    Cybrosys Technologies Pvt. Ltd.
-#    Copyright (C) 2023-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
-#    Author: Mohammed Dilshad Tk (odoo@cybrosys.com)
+#    Copyright (C) 2025-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
+#    Author: Abbas P (odoo@cybrosys.com)
 #
 #    This program is free software: you can modify
 #    it under the terms of the GNU Affero General Public License (AGPL) as
@@ -27,7 +27,7 @@ class SalonWorkingHours(models.Model):
     _name = 'salon.working.hours'
     _description = 'Salon Working Hours'
 
-    name = fields.Char(string="Name", help="Name of working hours")
+    name = fields.Char(string="Name", help="Name of working hours", required=True)
     from_time = fields.Float(string="Starting Time", help="Starting time of "
                                                           "salon")
     to_time = fields.Float(string="Closing Time", help="Salon work ending time")

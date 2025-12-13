@@ -10,7 +10,7 @@ website.
 
 Configuration
 ============
-- www.odoo.com/documentation/17.0/setup/install.html
+- www.odoo.com/documentation/18.0/setup/install.html
 - Install our custom addon
 
 Company
@@ -24,7 +24,7 @@ General Public License, Version 3 (AGPL V3).
 
 Credits
 -------
-Developer: (V17) Mohammed Dilshad Tk, Contact: odoo@cybrosys.com
+Developer: (V18) Abbas P, (V17) Mohammed Dilshad Tk, Contact: odoo@cybrosys.com
 
 Contacts
 --------

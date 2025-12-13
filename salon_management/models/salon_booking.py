@@ -2,8 +2,8 @@
 ################################################################################
 #
 #    Cybrosys Technologies Pvt. Ltd.
-#    Copyright (C) 2023-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
-#    Author: Mohammed Dilshad Tk (odoo@cybrosys.com)
+#    Copyright (C) 2025-TODAY Cybrosys Technologies(<https://www.cybrosys.com>).
+#    Author: Abbas P (odoo@cybrosys.com)
 #
 #    This program is free software: you can modify
 #    it under the terms of the GNU Affero General Public License (AGPL) as
@@ -48,10 +48,6 @@ class SalonBooking(models.Model):
     company_id = fields.Many2one(comodel_name='res.company', string='Company',
                                  default=lambda self: self.env.company,
                                  help="Default company")
-    language_id = fields.Many2one(comodel_name='res.lang', string='Language',
-                                  default=lambda self: self.env[
-                                      'res.lang'].browse(1),
-                                  help="Default language")
     filtered_order_ids = fields.Many2many(comodel_name='salon.order',
                                           string="Salon Orders",
                                           compute="_compute_filtered_order_ids",
@@ -79,23 +75,21 @@ class SalonBooking(models.Model):
 
     def action_approve_booking(self):
         """Approve the booking for salon services"""
-        salon_order = self.env['salon.order'].create(
-                        {'customer_name': self.name,
-                         'chair_id': self.chair_id.id,
-                         'start_time': self.time,
-                         'date': fields.Datetime.now(),
-                         'stage_id': 1,
-                         'booking_identifier': True})
         for service in self.service_ids:
             self.env['salon.order.line'].create({
                 'service_id': service.id,
                 'time_taken': service.time_taken,
                 'price': service.price,
                 'price_subtotal': service.price,
-                'salon_order_id': salon_order.id,
+                'salon_order_id': self.env['salon.order'].create(
+                        {'customer_name': self.name,
+                         'chair_id': self.chair_id.id,
+                         'start_time': self.time,
+                         'date': fields.Datetime.now(),
+                         'stage_id': 1,
+                         'booking_identifier': True}).id,
             })
-
-        mail = self.env['mail.template'].browse(self.env.ref(
+        self.env['mail.template'].browse(self.env.ref(
             'salon_management.mail_template_salon_approved').id).send_mail(
                         self.id, force_send=True)
         self.state = "approved"

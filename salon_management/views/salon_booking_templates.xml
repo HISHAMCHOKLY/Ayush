@@ -57,7 +57,6 @@
                                                 <div>
                                                     <input type="checkbox"
                                                            t-att-service-id="service.id"
-                                                           id="service.name"
                                                            class="check_box_salon"/>
                                                     <label for="service.id"
                                                            t-esc="service.name"/>
@@ -211,13 +210,13 @@
                                             <div id="style-2"
                                                  style="overflow-y:scroll;height:105px;padding-right:25px;padding-left:25px;margin-right:10px;">
                                                 <table class="table">
-                                                    <th style="font-size:11px;">
+                                                    <th style="font-size:11px;background:#7c7bad;">
                                                         Order No.
                                                     </th>
-                                                    <th style="font-size:11px;">
+                                                    <th style="font-size:11px;background:#7c7bad;">
                                                         Start Time
                                                     </th>
-                                                    <th style="font-size:11px;">
+                                                    <th style="font-size:11px;background:#7c7bad;">
                                                         End Time
                                                     </th>
                                                     <div>
@@ -226,15 +225,15 @@
                                                                t-as="order_obj">
                                                                 <t t-if="order_obj.chair_id.id == chair_obj.id">
                                                                     <tr>
-                                                                        <td>
+                                                                        <td style="background:#7c7bad;">
                                                                             <span t-field="order_obj.id"/>
                                                                             .
                                                                         </td>
-                                                                        <td>
+                                                                        <td style="background:#7c7bad;">
                                                                             <span t-field="order_obj.start_time"
                                                                                   t-options='{"format": "HH:mm"}'/>
                                                                         </td>
-                                                                        <td>
+                                                                        <td style="background:#7c7bad;">
                                                                             <span t-field="order_obj.end_time"
                                                                                   t-options='{"format": "HH:mm"}'/>
                                                                         </td>
