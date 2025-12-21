@@ -32,3 +32,4 @@ class SalonStage(models.Model):
                        help="Name of the stages")
     sequence = fields.Integer('Sequence', default=1,
                               help="Used to order stages. Lower is first.")
+    color = fields.Integer('Color')

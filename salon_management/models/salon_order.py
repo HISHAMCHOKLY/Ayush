@@ -38,14 +38,13 @@ class SalonOrder(models.Model):
     end_time = fields.Datetime(string="End time", help="End time of the order")
     date = fields.Datetime(string="Date", required=True,
                            default=fields.Datetime.now, help="Registering date")
-    color = fields.Integer(string="Color", default=6,
+    color = fields.Integer(string="Color",
+                           related='stage_id.color',
                            help="Color for the order")
     partner_id = fields.Many2one(
         'res.partner', string="Customer", required=False,
         help="If the customer is a regular customer, then you can add the"
              " customer in your database")
-    customer_name = fields.Char(string="Name", required=True,
-                                help="Name of salon customer")
     currency_id = fields.Many2one(
         'res.currency', string='Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id.id,
