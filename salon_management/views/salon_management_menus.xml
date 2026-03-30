@@ -19,13 +19,23 @@
         <menuitem id="salon_chair_menu_action" name="Chair"
                   parent="salon_management_salon_root"
                   action="salon_chair_action"/>
-        <menuitem id="salon_service_menu_action"
-                  parent="salon_management_salon_root"
-                  action="salon_service_action"/>
+
 
         <menuitem id="salon_booking_menu_action" name="Bookings"
                   parent="salon_management_salon_root"
                   action="salon_booking_action"/>
+                  
+        <record id="salon_product_template_action" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">kanban,list,form</field>
+        </record>
+
+        <menuitem id="salon_product_menu_action" name="Products"
+                  parent="salon_management_salon_root"
+                  action="salon_product_template_action"
+                  sequence="100"/>
+                  
         <menuitem id="salon_management_settings_menu_root"
                   parent="salon_management_menu_root" name="Configuration"/>
         <menuitem id="salon_config_settings_menu_action"

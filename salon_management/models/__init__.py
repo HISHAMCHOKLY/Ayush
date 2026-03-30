@@ -24,10 +24,12 @@ from . import res_partner
 from . import res_users
 from . import salon_chair
 from . import salon_holiday
-from . import salon_service
+# from . import salon_service
 from . import salon_working_hours
 from . import salon_booking
 from . import salon_chair_user
 from . import salon_order
 from . import salon_order_line
 from . import salon_stage
+from . import product_template
+from . import service_equipment_line

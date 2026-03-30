@@ -190,6 +190,8 @@
                                    invisible="1"/>
                             <field name="time_taken_total" invisible="1"/>
                             <field name="color"/>
+                            <field name="start_time"/>
+                            <field name="end_time"/>
                             <field name="validation_controller"
                                    invisible="1"/>
                         </group>
@@ -201,7 +203,7 @@
                                 <form string="Salon Order Lines">
                                     <group>
                                         <group>
-                                            <field name="service_id"/>
+                                            <field name="product_id"/>
                                             <field name="time_taken"/>
                                             <field name="currency_id"
                                                    invisible="1"/>
@@ -212,7 +214,7 @@
                                 </form>
                                 <list string="Salon Order Lines"
                                       editable="bottom">
-                                    <field name="service_id"/>
+                                    <field name="product_id"/>
                                     <field name="time_taken"
                                            widget="float_time"/>
                                     <field name="currency_id"
@@ -222,7 +224,7 @@
                                            widget="monetary"/>
                                 </list>
                                 <kanban class="o_kanban_mobile">
-                                    <field name="service_id"/>
+                                    <field name="product_id"/>
                                     <field name="time_taken"/>
                                     <field name="price_subtotal"
                                            widget="monetary"/>

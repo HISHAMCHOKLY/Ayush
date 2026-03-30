@@ -88,12 +88,14 @@ class SalonOrder(models.Model):
     def _compute_price_subtotal(self):
         """Compute the subtotal price of order line"""
         amount_untaxed = 0.0
+        self.price_subtotal = amount_untaxed
+
+    @api.onchange('order_line_ids')
+    def onchange_time_taken(self):
         total_time_taken = 0.0
         for order in self:
             for line in order.order_line_ids:
-                amount_untaxed += line.price_subtotal
                 total_time_taken += line.time_taken
-        self.price_subtotal = amount_untaxed
         time_takes = total_time_taken
         hours = int(time_takes)
         minutes = (time_takes - hours) * 60

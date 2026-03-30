@@ -29,6 +29,7 @@ class SalonOrderLine(models.Model):
 
     service_id = fields.Many2one('salon.service', string="Service",
                                  help="Select salon services")
+    product_id = fields.Many2one('product.product', string="Service", domain=[('type', '=', 'service')])
     currency_id = fields.Many2one(
         'res.currency', string='Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id.id,
@@ -41,12 +42,12 @@ class SalonOrderLine(models.Model):
     time_taken = fields.Float(string='Time Taken', help="Time taken for "
                                                         "service")
 
-    @api.onchange('service_id')
-    def _onchange_service_id(self):
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
         """Onchange function of service_id field"""
-        self.price = self.service_id.price
-        self.price_subtotal = self.service_id.price
-        self.time_taken = self.service_id.time_taken
+        self.price = self.product_id.lst_price
+        self.price_subtotal = self.product_id.lst_price
+        self.time_taken = self.product_id.time_taken
 
     @api.onchange('price')
     def _onchange_price(self):

@@ -21,7 +21,7 @@
 ################################################################################
 {
     'name': 'Beauty Spa Management',
-    'version': '18.0.1.0.2',
+    'version': '18.0.1.0.3',
     "category": "Services",
     'summary': 'Beauty Parlour Management with Online Booking System',
     'description': 'This module to helps your customers to do the online '
@@ -46,11 +46,12 @@
         'views/salon_booking_templates.xml',
         'views/salon_chair_views.xml',
         'views/salon_working_hours.xml',
-        'views/salon_service_views.xml',
+        # 'views/salon_service_views.xml',
         'views/salon_booking_views.xml',
         'views/salon_order_views.xml',
         'views/salon_stage_views.xml',
         'views/salon_management_menus.xml',
+        'views/product_template_views.xml',
     ],
     'demo': [
         'data/product_template_data.xml',
