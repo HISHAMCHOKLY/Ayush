@@ -6,6 +6,7 @@
             <list string="Salon Stages" default_order="sequence asc">
                 <field name="sequence"/>
                 <field name="name"/>
+                <field name="is_complete_state"/>
                 <field name="color"/>
             </list>
         </field>
@@ -19,6 +20,7 @@
                 <sheet>
                     <group>
                         <field name="name"/>
+                        <field name="is_complete_state"/>
                         <field name="sequence"/>
                         <field name="color" widget="color_picker"/>
                     </group>

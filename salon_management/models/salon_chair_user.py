@@ -40,7 +40,7 @@ class SalonChairUser(models.Model):
         'salon.chair', string="Chair", required=True,
         ondelete='cascade', index=True, copy=False, help="Select salon chairs")
 
-    @api.model
+    @api.model_create_multi
     def create(self, val):
         """Update records on adding new chair user"""
         all_active_users = []

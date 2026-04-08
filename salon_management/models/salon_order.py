@@ -83,6 +83,7 @@ class SalonOrder(models.Model):
                                                    " order created.")
     count = fields.Integer(string='Delivery Orders', compute='_compute_count',
                            help="The count of the delivery")
+    invoice_id = fields.Many2one('account.move', string="Invoice")
 
     @api.depends('order_line_ids.price_subtotal')
     def _compute_price_subtotal(self):
@@ -157,7 +158,7 @@ class SalonOrder(models.Model):
             if values['stage_id'] == 2:
                 self.action_validate()
                 self.action_confirm()
-        self.update_number_of_orders()
+        # self.update_number_of_orders()
         return super(SalonOrder, self).write(values)
 
     def action_confirm(self):
@@ -170,24 +171,24 @@ class SalonOrder(models.Model):
         if self.partner_id:
             self.partner_id.partner_salon = True
         self.stage_id = 2
-        self.update_number_of_orders()
+        # self.update_number_of_orders()
         self.chair_id.total_time_taken_chair += self.time_taken_total
         self.user_id = self.chair_id.user_id
 
     def action_validate(self):
         """ Validate function of salon order"""
         self.validation_controller = True
-        self.update_number_of_orders()
+        # self.update_number_of_orders()
 
     def action_close(self):
         """Close function for salon order"""
         self.stage_id = 4
-        self.update_number_of_orders()
+        # self.update_number_of_orders()
 
     def action_cancel(self):
         """Function to cancel the salon order"""
         self.stage_id = 5
-        self.update_number_of_orders()
+        # self.update_number_of_orders()
 
     def action_update_total(self):
         """Update total amount in salon order"""
@@ -204,59 +205,54 @@ class SalonOrder(models.Model):
             self.chair_id = self._context['active_id']
 
     def action_create_invoice(self):
-        """Function to create invoice"""
+        """Function to create invoice from salon order lines"""
+        self.ensure_one()
+        if not self.order_line_ids:
+            raise UserError(_("Please add at least one service line to "
+                              "create an invoice."))
         if self.partner_id:
-            supplier = self.partner_id
+            customer = self.partner_id
         else:
-            supplier = self.partner_id.search(
-                [("name", "=", "Salon Default Customer")])
+            customer = self.env['res.partner'].search(
+                [("name", "=", "Salon Default Customer")], limit=1)
+            if not customer:
+                raise UserError(_("Please define a customer or ensure"))
         lines = []
-        product_id = self.env['product.product'].search(
-            [("name", "=", "Salon Service")])
         for records in self.order_line_ids:
-            if product_id.property_account_income_id.id:
-                income_account = product_id.property_account_income_id.id
-            elif product_id.categ_id.property_account_income_categ_id.id:
-                income_account = product_id.categ_id. \
-                    property_account_income_categ_id.id
-            else:
+            product = records.product_id
+            if not product:
+                continue
+            accounts = product.product_tmpl_id.get_product_accounts()
+            income_account = accounts.get('income')
+            if not income_account:
                 raise UserError(
                     _("Please define income account for this product: "
-                      "'%s' (id:%d).") % (product_id.name, product_id.id))
+                      "'%s' (id:%d).") % (product.name, product.id))
             value = (0, 0, {
-                'name': records.service_id.name,
-                'account_id': income_account,
+                # 'name': records.service_id.name or product.name,
+                'account_id': income_account.id,
                 'price_unit': records.price,
                 'quantity': 1,
-                'product_id': product_id.id,
+                'product_id': product.id,
             })
             lines.append(value)
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': customer.id,
+            'invoice_user_id': self.env.user.id,
+            'invoice_origin': self.name,
+            'salon_order_id': self.id,
+            'invoice_line_ids': lines})
+        self.invoice_id = invoice.id
         result = {
             'name': self.env.ref('account.action_move_out_invoice_type',
                                  raise_if_not_found=False).name,
             'type': 'ir.actions.act_window',
             'views': [[False, 'form']],
             'target': 'current',
-            'res_id': self.env['account.move'].create({
-                'move_type': 'out_invoice',
-                'partner_id': supplier.id,
-                'invoice_user_id': self.env.user.id,
-                'invoice_origin': self.name,
-                'invoice_line_ids': lines}).id,
+            'res_id': invoice.id,
             'res_model': 'account.move',
         }
-        self.inv_stage_identifier = True
-        self.stage_id = 3
-        invoiced_records = self.env['salon.order'].search(
-            [('stage_id', 'in', [3, 4]), ('chair_id', '=', self.chair_id.id)])
-        total = 0
-        for rows in invoiced_records:
-            invoiced_date = str(rows.date)
-            invoiced_date = invoiced_date[0:10]
-            if invoiced_date == str(date.today()):
-                total = total + rows.price_subtotal
-        self.chair_id.collection_today = total
-        self.update_number_of_orders()
         return result
 
     def unlink(self):
@@ -266,8 +262,8 @@ class SalonOrder(models.Model):
                 raise UserError(_("You can't delete an invoiced salon order!"))
         return super(SalonOrder, self).unlink()
 
-    def update_number_of_orders(self):
-        """ Function to update the number of active orders for the chair."""
-        self.chair_id.number_of_orders = len(self.env['salon.order'].search([
-        ]).filtered(lambda order: order.chair_id.id == self.chair_id.id
-                    and order.stage_id in [2, 3]))
+    # def update_number_of_orders(self):
+    #     """ Function to update the number of active orders for the chair."""
+    #     self.chair_id.number_of_orders = len(self.env['salon.order'].search([
+    #     ]).filtered(lambda order: order.chair_id.id == self.chair_id.id
+    #                 and order.stage_id in [2, 3]))

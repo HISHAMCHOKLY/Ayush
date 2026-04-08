@@ -52,6 +52,7 @@
         'views/salon_stage_views.xml',
         'views/salon_management_menus.xml',
         'views/product_template_views.xml',
+        'views/account_move_views.xml',
     ],
     'demo': [
         'data/product_template_data.xml',
