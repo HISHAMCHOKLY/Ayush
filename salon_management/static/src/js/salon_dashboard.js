@@ -66,7 +66,7 @@ export class SalonDashboard extends Component {
             res_model: 'salon.order',
             view_mode: 'list,form',
             views: [[false, 'list'], [false, 'form']],
-            domain: [['stage_id', 'in', [3, 4]]],
+            domain: [['state', '=', 'invoiced']],
             target: 'current'
         });
     }

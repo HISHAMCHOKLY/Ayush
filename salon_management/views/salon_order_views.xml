@@ -13,7 +13,8 @@
                 <field name="currency_id" column_invisible="1"/>
                 <field name="time_taken_total" widget="float_time"/>
                 <field name="price_subtotal" widget="monetary"/>
-                <field name="stage_id"/>
+                <field name="invoice_state" widget="badge"/>
+                <field name="state"/>
             </list>
         </field>
     </record>
@@ -43,7 +44,7 @@
                             <strong>End — </strong> <t t-esc="end_time.toFormat('f')"/>
                         </div>
                         <div>
-                            <strong>Status — </strong> <t t-esc="stage_id[1]"/>
+                            <strong>Status — </strong> <t t-esc="state"/>
                         </div>
                     </div>
                 </templates>
@@ -52,7 +53,7 @@
                 <field name="partner_id"/>
                 <field name="start_time"/>
                 <field name="end_time"/>
-                <field name="stage_id"/>
+                <field name="state"/>
             </gantt>
         </field>
     </record>
@@ -61,11 +62,11 @@
         <field name="name">salon.order.view.kanban</field>
         <field name="model">salon.order</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="stage_id"
+            <kanban default_group_by="state"
                     class="o_kanban_small_column" quick_create="false"
                     on_create="quick_create">
                 <field name="color"/>
-                <field name="stage_id"/>
+                <field name="state"/>
                 <field name="currency_id" invisible="1"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -136,72 +137,78 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_validate"
-                            invisible="stage_id != 1 or validation_controller == True"
-                            string="Validate" type="object"
-                            class="oe_highlight"/>
                     <button name="action_confirm"
-                            invisible="stage_id != 1 or validation_controller != True"
+                            invisible="state != 'draft'"
                             string="Confirm" type="object"
                             class="oe_highlight"/>
+                    <button name="action_validate"
+                            invisible="state != 'confirm'"
+                            string="Validate" type="object"
+                            class="oe_highlight"/>
                     <button name="action_create_invoice"
-                            invisible="invoice_id"
+                            invisible="invoice_id or state != 'validate'"
                             string="Create Invoice" type="object"
                             class="oe_highlight"/>
+                    <button name="action_create_delivery"
+                            string="Create Delivery" type="object"
+                            invisible="delivery_count != 0 or state not in ['validate', 'invoiced']"
+                            class="oe_highlight"/>
                     <button name="action_cancel" string="Cancel"
-                            invisible="stage_id not in [1,2]"
+                            invisible="state not in ['draft','confirm','validate']"
                             type="object"/>
-                    <button name="action_close"
-                            invisible="stage_id != [1,2]" string="Close"
-                            type="object"/>
-                    <field name="stage_id" widget="statusbar"
-                           domain="[('id','in',[1,2,4])]"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirm,validate,invoiced"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_invoice_salon"
                                 type="object" class="oe_stat_button"
                                 icon="fa-pencil-square-o"
-                                invisible="stage_id not in [3,4]">
+                                invisible="state != 'invoiced'">
                             <field name="count" widget="statinfo"
                                    string="Invoice"/>
+                        </button>
+                        <button name="action_view_delivery"
+                                type="object" class="oe_stat_button"
+                                icon="fa-truck"
+                                invisible="delivery_count == 0">
+                            <field name="delivery_count" widget="statinfo"
+                                   string="Delivery"/>
                         </button>
                     </div>
                     <group>
                         <group>
                             <field name="partner_id"
                                    domain="[('partner_salon','=',True)]"
-                                   readonly="stage_id != 1"/>
+                                   readonly="state != 'draft'"/>
                             <field name="chair_id"
                                    domain="[('active_booking_chairs','!=',True)]"
-                                   readonly="stage_id != 1"
+                                   readonly="state != 'draft'"
                                    options="{'no_create': True}"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="invoice_id" readonly="1"/>
-
+                            <field name="invoice_state" invisible="not invoice_id"/>
                         </group>
                         <group>
                             <field name="booking_identifier" invisible="1"/>
-                            <field name="date" readonly="stage_id != 1"/>
+                            <field name="date" readonly="state != 'draft'"/>
                             <field name="start_time"
-                                   readonly="stage_id != 1"
-                                   invisible="stage_id != 1 or booking_identifier != True"/>
-                            <field name="end_time" readonly="stage_id != 1"
-                                   invisible="stage_id != 1 or booking_identifier != True"/>
+                                   readonly="state != 'draft'"
+                                   invisible="state != 'draft' or booking_identifier != True"/>
+                            <field name="end_time" readonly="state != 'draft'"
+                                   invisible="state != 'draft' or booking_identifier != True"/>
                             <field name="inv_stage_identifier"
                                    invisible="1"/>
                             <field name="time_taken_total" invisible="1"/>
                             <field name="color"/>
                             <field name="start_time"/>
                             <field name="end_time"/>
-                            <field name="validation_controller"
-                                   invisible="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Order Lines">
                             <field name="order_line_ids" mode="list,kanban"
-                                   readonly="stage_id != 1">
+                                   readonly="state != 'draft'">
                                 <form string="Salon Order Lines">
                                     <group>
                                         <group>
@@ -276,6 +283,14 @@
                             <field name="note" class="oe_inline"
                                    placeholder="Setup default terms and conditions in your company settings."/>
                             <div class="oe_clear"/>
+                        </page>
+                        <page string="Equipments">
+                            <field name="equipment_line_ids">
+                                <list editable="bottom" string="Equipments">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                </list>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>

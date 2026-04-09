@@ -86,7 +86,7 @@ class SalonBooking(models.Model):
                          'chair_id': self.chair_id.id,
                          'start_time': self.time,
                          'date': fields.Datetime.now(),
-                         'stage_id': 1,
+                         'state': 'draft',
                          'booking_identifier': True}).id,
             })
         self.env['mail.template'].browse(self.env.ref(
@@ -110,7 +110,7 @@ class SalonBooking(models.Model):
             'bookings': self.env['salon.booking'].search_count(
                 [('state', '=', 'approved')]),
             'sales': self.env['salon.order'].search_count(
-                [('stage_id', 'in', [3, 4])]),
+                [('state', '=', 'invoiced')]),
             'orders': self.env['salon.order'].search_count([]),
             'clients': self.env['res.partner'].search_count(
                 [('partner_salon', '=', True)]),

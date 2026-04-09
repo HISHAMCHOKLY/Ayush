@@ -51,5 +51,4 @@ class SalonChairUser(models.Model):
         for user in self.env['res.users'].search(
                 [('id', 'not in', all_active_users)]):
             user.write({'user_salon_active': False})
-        val['read_only_checker'] = True
         return super(SalonChairUser, self).create(val)

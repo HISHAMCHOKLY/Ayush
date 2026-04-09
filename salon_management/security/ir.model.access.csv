@@ -2,13 +2,11 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_salon_order_salon_user,salon.order,model_salon_order,salon_management.group_salon_user,1,1,1,0
 access_salon_order_salon_portal,salon.order,model_salon_order,base.group_portal,1,1,0,0
 access_salon_order_line_salon_user,salon.order.line,model_salon_order_line,salon_management.group_salon_user,1,1,1,0
-access_salon_stage_salon_user,salon.stage,model_salon_stage,salon_management.group_salon_user,1,1,1,0
 access_salon_chair_salon_user,salon.chair,model_salon_chair,salon_management.group_salon_user,1,1,0,0
 access_salon_chair_salon_portal,salon.chair,model_salon_chair,base.group_portal,1,1,0,0
 
 access_salon_order_manager,salon.order,model_salon_order,salon_management.group_salon_manager,1,1,1,1
 access_salon_order_line_manager,salon.order.line,model_salon_order_line,salon_management.group_salon_manager,1,1,1,1
-access_salon_stage_manager,salon.stage,model_salon_stage,salon_management.group_salon_manager,1,1,1,1
 access_salon_chair_manager,salon.chair,model_salon_chair,salon_management.group_salon_manager,1,1,1,1
 access_salon_booking_manager,salon.booking,model_salon_booking,salon_management.group_salon_manager,1,1,1,1
 access_salon_booking_portal,salon.booking,model_salon_booking,base.group_portal,1,1,1,0
@@ -20,7 +18,6 @@ access_salon_chair_user_manager,salon.chair.user,model_salon_chair_user,salon_ma
 
 access_salon_order_public,salon.order,model_salon_order,base.group_public,1,0,0,0
 access_salon_order_line_public,salon.order.line,model_salon_order_line,base.group_public,1,0,0,0
-access_salon_stage_public,salon.stage,model_salon_stage,base.group_public,1,0,0,0
 access_salon_chair_public,salon.chair,model_salon_chair,base.group_public,1,0,0,0
 "","","","","","","",""
 access_salon_booking_public,salon.booking,model_salon_booking,base.group_public,1,1,1,0
@@ -32,4 +29,5 @@ access_res_partner_public,res.partner,model_res_partner,base.group_public,1,0,0,
 access_res_users_public,res.users,model_res_users,base.group_public,1,0,0,0
 access_salon_chair_user_public,salon.chair.user,model_salon_chair_user,base.group_public,1,0,0,0
 access_service_equipment_line,service.equipment.line,model_service_equipment_line,base.group_user,1,1,1,1
+access_salon_order_equipment,salon.order.equipment,model_salon_order_equipment,base.group_user,1,1,1,1
 ,,,,,,,

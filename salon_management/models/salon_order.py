@@ -39,7 +39,6 @@ class SalonOrder(models.Model):
     date = fields.Datetime(string="Date", required=True,
                            default=fields.Datetime.now, help="Registering date")
     color = fields.Integer(string="Color",
-                           related='stage_id.color',
                            help="Color for the order")
     partner_id = fields.Many2one(
         'res.partner', string="Customer", required=False,
@@ -64,16 +63,15 @@ class SalonOrder(models.Model):
                                      string="Order Lines", copy=True,
                                      help='Salon order line for add '
                                           'list of services', required=True)
-    stage_id = fields.Many2one(comodel_name='salon.stage', string="State",
-                               group_expand='_read_group_stage_ids', default=1,
-                               copy=False, help="state for the salon order(user"
-                                                " can add dynamic state from"
-                                                " the kanban view)")
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirm', 'Confirmed'),
+        ('validate', 'Validated'),
+        ('invoiced', 'Invoiced'),
+        ('canceled', 'Canceled')
+    ], string='Status', default='draft', copy=False, help="State of the salon order")
     inv_stage_identifier = fields.Boolean(string="Stage Identifier",
                                           help="Field to detect stage")
-    validation_controller = fields.Boolean(
-        string="Validation controller", default=False,
-        help="Start time of the order")
     booking_identifier = fields.Boolean(string="Booking Identifier",
                                         help="Field to identify booking")
     user_id = fields.Many2one('res.users', string="Chair User")
@@ -81,9 +79,46 @@ class SalonOrder(models.Model):
                                               default=lambda self: self._uid,
                                               help="The user whom the salon"
                                                    " order created.")
-    count = fields.Integer(string='Delivery Orders', compute='_compute_count',
-                           help="The count of the delivery")
+    count = fields.Integer(string='Invoices', compute='_compute_count',
+                           help="The count of the invoice")
     invoice_id = fields.Many2one('account.move', string="Invoice")
+    invoice_state = fields.Selection(related='invoice_id.state', string="Invoice State", store=True)
+    equipment_line_ids = fields.One2many('salon.order.equipment', 'salon_order_id', string="Equipments", compute='_compute_equipment_ids', store=True, readonly=False)
+    delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_delivery_count', help="The count of the delivery")
+
+    def _compute_delivery_count(self):
+        """Compute the count of devalidation_controllerlivery orders"""
+        for order in self:
+            order.delivery_count = self.env['stock.picking'].search_count([('origin', '=', order.name)])
+
+    @api.depends('order_line_ids.product_id', 'order_line_ids.product_id.product_tmpl_id.equipment_ids')
+    def _compute_equipment_ids(self):
+        for order in self:
+            equipment_dict = {}
+            for line in order.order_line_ids:
+                if line.product_id and line.product_id.product_tmpl_id.equipment_ids:
+                    for eq in line.product_id.product_tmpl_id.equipment_ids:
+                        if eq.product_id.id in equipment_dict:
+                            equipment_dict[eq.product_id.id] += eq.quantity
+                        else:
+                            equipment_dict[eq.product_id.id] = eq.quantity
+            
+            commands = [(5, 0, 0)]
+            for prod_id, qty in equipment_dict.items():
+                commands.append((0, 0, {
+                    'product_id': prod_id,
+                    'quantity': qty
+                }))
+            order.equipment_line_ids = commands
+
+    def action_view_delivery(self):
+        """Function to open delivery order for the salon order"""
+        self.ensure_one()
+        return {'name': 'Delivery Orders',
+                'domain': [('origin', '=', self.name)],
+                'res_model': 'stock.picking',
+                'view_mode': 'list,form',
+                'type': 'ir.actions.act_window'}
 
     @api.depends('order_line_ids.price_subtotal')
     def _compute_price_subtotal(self):
@@ -121,43 +156,38 @@ class SalonOrder(models.Model):
                 'view_mode': 'list,form',
                 'type': 'ir.actions.act_window'}
 
-    @api.model
-    def _read_group_stage_ids(self, stages, domain):
-        """Return the stages to stage_ids"""
-        return self.env['salon.stage'].search([])
-
     def write(self, values):
         """ Manage drag and drop in salon order kanban view """
-        if 'stage_id' in values.keys():
-            if self.stage_id.id == 3:
-                if values['stage_id'] != 4:
+        if 'state' in values:
+            if self.state == 'invoiced':
+                raise ValidationError(_("You can't perform that move!"))
+            if self.state == 'canceled':
+                raise ValidationError(
+                    _("You can't move a salon order from Canceled state!"))
+            if self.state == 'draft':
+                if values['state'] not in ['confirm', 'canceled']:
                     raise ValidationError(_("You can't perform that move!"))
-                else:
+            if self.state == 'confirm':
+                if values['state'] == 'canceled':
                     time_taken_chair = self.chair_id.total_time_taken_chair
                     self.chair_id.total_time_taken_chair = (
                             time_taken_chair - self.time_taken_total)
-            if self.stage_id.id == 4:
-                raise ValidationError(
-                    _("You can't move a salon order from Closed stage!"))
-            if self.stage_id.id == 5:
-                raise ValidationError(
-                    _("You can't move a salon order from Cancel stage!"))
-            if self.stage_id.id == 1:
-                if values['stage_id'] not in [2, 5]:
+                elif values['state'] not in ['validate', 'canceled']:
                     raise ValidationError(_("You can't perform that move!"))
-            if self.stage_id.id == 2:
-                if values['stage_id'] == 5:
+            if self.state == 'validate':
+                if values['state'] == 'canceled':
                     time_taken_chair = self.chair_id.total_time_taken_chair
                     self.chair_id.total_time_taken_chair = (
                             time_taken_chair - self.time_taken_total)
-                elif values['stage_id'] == 1 or values['stage_id'] == 4:
+                elif values['state'] not in ['invoiced', 'canceled']:
                     raise ValidationError(_("You can't perform that move!"))
-                elif values['stage_id'] == 3 and not self.inv_stage_identifier:
+                elif values['state'] == 'invoiced' and not self.inv_stage_identifier:
                     self.action_create_invoice()
-        if 'stage_id' in values.keys() and self.name == "Draft Salon Order":
-            if values['stage_id'] == 2:
-                self.action_validate()
+                    
+        if 'state' in values and self.name == "Draft Salon Order":
+            if values['state'] == 'confirm':
                 self.action_confirm()
+
         # self.update_number_of_orders()
         return super(SalonOrder, self).write(values)
 
@@ -166,28 +196,62 @@ class SalonOrder(models.Model):
         sequence_code = 'salon.order.sequence'
         order_date = str(self.date)
         order_date = order_date[0:10]
-        self.name = self.env['ir.sequence'].with_context(
-            ir_sequence_date=order_date).next_by_code(sequence_code)
+        if self.name == "Draft Salon Order":
+            self.name = self.env['ir.sequence'].with_context(
+                ir_sequence_date=order_date).next_by_code(sequence_code)
         if self.partner_id:
             self.partner_id.partner_salon = True
-        self.stage_id = 2
+        self.state = 'confirm'
         # self.update_number_of_orders()
         self.chair_id.total_time_taken_chair += self.time_taken_total
         self.user_id = self.chair_id.user_id
 
     def action_validate(self):
         """ Validate function of salon order"""
-        self.validation_controller = True
-        # self.update_number_of_orders()
+        self.state = 'validate'
+        
+    def action_create_delivery(self):
+        """Function to create delivery order manually"""
+        for order in self:
+            if order.delivery_count > 0:
+                raise UserError(_("A delivery order has already been created for this salon order!"))
+            picking_type = self.env['stock.picking.type'].search([('code', '=', 'outgoing'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
+            if not picking_type:
+                picking_type = self.env['stock.picking.type'].search([('code', '=', 'outgoing')], limit=1)
+            if order.equipment_line_ids and picking_type:
+                location_id = picking_type.default_location_src_id.id
+                location_dest_id = picking_type.default_location_dest_id.id
+                if not location_dest_id:
+                    location_dest_id = self.env.ref('stock.stock_location_customers', raise_if_not_found=False).id
+                picking_vals = {
+                    'partner_id': order.partner_id.id,
+                    'picking_type_id': picking_type.id,
+                    'location_id': location_id,
+                    'location_dest_id': location_dest_id,
+                    'origin': order.name,
+                }
+                picking = self.env['stock.picking'].create(picking_vals)
+                for eq in order.equipment_line_ids:
+                    if eq.product_id and eq.quantity > 0:
+                        self.env['stock.move'].create({
+                            'name': eq.product_id.name,
+                            'product_id': eq.product_id.id,
+                            'product_uom_qty': eq.quantity,
+                            'product_uom': eq.product_id.uom_id.id,
+                            'picking_id': picking.id,
+                            'location_id': location_id,
+                            'location_dest_id': location_dest_id,
+                        })
+                picking.action_confirm()
 
-    def action_close(self):
-        """Close function for salon order"""
-        self.stage_id = 4
         # self.update_number_of_orders()
 
     def action_cancel(self):
         """Function to cancel the salon order"""
-        self.stage_id = 5
+        if self.state in ['confirm', 'validate']:
+            time_taken_chair = self.chair_id.total_time_taken_chair
+            self.chair_id.total_time_taken_chair = (time_taken_chair - self.time_taken_total)
+        self.state = 'canceled'
         # self.update_number_of_orders()
 
     def action_update_total(self):
@@ -244,6 +308,8 @@ class SalonOrder(models.Model):
             'salon_order_id': self.id,
             'invoice_line_ids': lines})
         self.invoice_id = invoice.id
+        self.inv_stage_identifier = True
+        self.state = 'invoiced'
         result = {
             'name': self.env.ref('account.action_move_out_invoice_type',
                                  raise_if_not_found=False).name,
@@ -258,7 +324,7 @@ class SalonOrder(models.Model):
     def unlink(self):
         """ Unlink/delete salon order """
         for order in self:
-            if order.stage_id.id == 3 or order.stage_id.id == 4:
+            if order.state in ['invoiced', 'closed']:
                 raise UserError(_("You can't delete an invoiced salon order!"))
         return super(SalonOrder, self).unlink()
 

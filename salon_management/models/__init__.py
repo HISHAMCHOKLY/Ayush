@@ -30,7 +30,7 @@ from . import salon_booking
 from . import salon_chair_user
 from . import salon_order
 from . import salon_order_line
-from . import salon_stage
 from . import product_template
 from . import service_equipment_line
 from . import account_move
+from . import salon_order_equipment

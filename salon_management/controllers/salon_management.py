@@ -62,7 +62,7 @@ class SalonBookingWeb(http.Controller):
                     replace(tzinfo=None))
         order_obj = request.env['salon.order'].search(
             [('chair_id.active_booking_chairs', '=', True),
-             ('stage_id', 'in', [1, 2, 3]), ('start_time', '>=', date_start),
+             ('state', 'in', ['draft', 'open', 'invoiced']), ('start_time', '>=', date_start),
              ('start_time', '<=', date_end)])
         order_details = {}
         for order in order_obj:
@@ -108,7 +108,7 @@ class SalonBookingWeb(http.Controller):
         # chair_obj =
         order_obj = request.env['salon.order'].sudo().search(
             [('chair_id.active_booking_chairs', '=', True),
-             ('stage_id', 'in', [1, 2, 3]), ('start_time', '>=', date_start),
+             ('state', 'in', ['draft', 'open', 'invoiced']), ('start_time', '>=', date_start),
              ('start_time', '<=', date_end)])
         return request.render(
             'salon_management.salon_booking_form', {
@@ -133,7 +133,7 @@ class SalonOrders(http.Controller):
             number_of_orders.update({
                 chair.id: len(request.env['salon.order'].search(
                     [("chair_id", "=", chair.id),
-                     ("stage_id", "in", [2, 3])]))})
+                     ("state", "in", ['open', 'invoiced'])]))})
             chairs.append({'name': chair.name,
                            'id': chair.id,
                            'orders': number_of_orders[chair.id]})

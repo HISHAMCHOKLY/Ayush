@@ -28,7 +28,7 @@ class SalonChair(models.Model):
     _name = 'salon.chair'
     _description = 'Salon Chair'
 
-    name = fields.Char(string="Chair", required=True, readonly=True,
+    name = fields.Char(string="Chair", required=True,
                        default="New", help="Name for chair")
     number_of_orders = fields.Integer(string="No.of Orders", help="Number of ")
     collection_today = fields.Float(string="Today's Collection", 
@@ -79,7 +79,7 @@ class SalonChair(models.Model):
         for values in self.search([]):
             chair_obj = salon_chair.browse(values.ids)
             invoiced_records = chair_obj.env['salon.order'].search(
-                [('stage_id', 'in', [3, 4]), ('chair_id', '=', chair_obj.id)])
+                [('state', '=', 'invoiced'), ('chair_id', '=', chair_obj.id)])
             total = 0
             for rows in invoiced_records:
                 invoiced_date = str(rows.date)

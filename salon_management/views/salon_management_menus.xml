@@ -44,10 +44,6 @@
         <menuitem id="salon_working_hours_menu_action"
                   parent="salon_management_settings_menu_root"
                   name="Working Hours" action="salon_working_hours_action"/>
-        <menuitem id="menu_salon_stage"
-                  name="Stages"
-                  parent="salon_management_settings_menu_root"
-                  action="action_salon_stage"/>
 
     </data>
 </odoo>
