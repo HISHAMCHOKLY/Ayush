@@ -33,4 +33,5 @@ from . import salon_order_line
 from . import product_template
 from . import service_equipment_line
 from . import account_move
+from . import hr_employee
 from . import salon_order_equipment

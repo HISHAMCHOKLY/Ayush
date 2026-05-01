@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherit hr.employee form to add is_doctor field -->
+    <record id="hr_employee_view_form_inherit_salon" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.salon</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='active_group']" position="before">
+                <group string="Salon">
+                    <field name="is_doctor"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

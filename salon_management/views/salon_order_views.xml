@@ -8,6 +8,7 @@
             <list>
                 <field name="name"/>
                 <field name="chair_id"/>
+                <field name="employee_ids" widget="many2many_tags"/>
                 <field name="start_time"/>
                 <field name="end_time"/>
                 <field name="currency_id" column_invisible="1"/>
@@ -184,6 +185,12 @@
                             <field name="chair_id"
                                    domain="[('active_booking_chairs','!=',True)]"
                                    readonly="state != 'draft'"
+                                   options="{'no_create': True}"/>
+                            <field name="employee_ids" widget="many2many_tags"
+                                   readonly="state not in ['draft', 'confirm']"
+                                   options="{'no_create': True, 'color_field': 'color'}"/>
+                            <field name="doctor_id"
+                                   readonly="state not in ['draft', 'confirm']"
                                    options="{'no_create': True}"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="invoice_id" readonly="1"/>

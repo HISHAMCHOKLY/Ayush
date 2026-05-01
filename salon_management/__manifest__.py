@@ -21,7 +21,7 @@
 ################################################################################
 {
     'name': 'Beauty Spa Management',
-    'version': '18.0.1.0.4',
+    'version': '18.0.1.0.5',
     "category": "Services",
     'summary': 'Beauty Parlour Management with Online Booking System',
     'description': 'This module to helps your customers to do the online '
@@ -31,7 +31,7 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
     'website': "https://www.cybrosys.com",
-    'depends': ['account', 'base_setup', 'mail', 'website', 'contacts'],
+    'depends': ['account', 'base_setup', 'mail', 'website', 'contacts', 'hr'],
     'data': [
         'security/salon_management_groups.xml',
         'security/ir.model.access.csv',
@@ -52,6 +52,7 @@
         'views/salon_management_menus.xml',
         'views/product_template_views.xml',
         'views/account_move_views.xml',
+        'views/hr_employee_views.xml',
     ],
     'demo': [
         'data/product_template_data.xml',

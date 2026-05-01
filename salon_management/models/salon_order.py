@@ -85,11 +85,52 @@ class SalonOrder(models.Model):
     invoice_state = fields.Selection(related='invoice_id.state', string="Invoice State", store=True)
     equipment_line_ids = fields.One2many('salon.order.equipment', 'salon_order_id', string="Equipments", compute='_compute_equipment_ids', store=True, readonly=False)
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_delivery_count', help="The count of the delivery")
+    employee_ids = fields.Many2many(
+        'hr.employee', string="Employees",
+        help="Employees assigned to this salon order")
+    doctor_id = fields.Many2one(
+        'hr.employee', string="Doctor",
+        domain="[('is_doctor', '=', True)]",
+        help="Doctor assigned to this salon order")
 
     def _compute_delivery_count(self):
         """Compute the count of devalidation_controllerlivery orders"""
         for order in self:
             order.delivery_count = self.env['stock.picking'].search_count([('origin', '=', order.name)])
+
+    def _check_employee_availability(self):
+        """Check if the assigned employees are already booked on
+        another confirmed or validated order during the same time period."""
+        for order in self:
+            if not order.employee_ids:
+                continue
+            domain = [
+                ('id', '!=', order.id),
+                ('state', 'in', ['confirm', 'validate']),
+                ('employee_ids', 'in', order.employee_ids.ids),
+            ]
+            # Check time overlap if both start_time and end_time are set
+            if order.start_time and order.end_time:
+                domain += [
+                    ('start_time', '<', order.end_time),
+                    ('end_time', '>', order.start_time),
+                ]
+            conflicting_orders = self.env['salon.order'].search(domain)
+            if conflicting_orders:
+                # Find which employees are conflicting
+                conflicting_employees = order.employee_ids.filtered(
+                    lambda emp: emp.id in conflicting_orders.mapped('employee_ids').ids
+                )
+                employee_names = ', '.join(conflicting_employees.mapped('name'))
+                order_names = ', '.join(conflicting_orders.mapped('name'))
+                raise ValidationError(
+                    _("The following employee(s) are already assigned to "
+                      "confirmed/validated order(s) during this time period:\n\n"
+                      "Employee(s): %s\n"
+                      "Conflicting Order(s): %s\n\n"
+                      "Please choose different employees or adjust the time.",
+                      employee_names, order_names)
+                )
 
     @api.depends('order_line_ids.product_id', 'order_line_ids.product_id.product_tmpl_id.equipment_ids')
     def _compute_equipment_ids(self):
@@ -193,6 +234,7 @@ class SalonOrder(models.Model):
 
     def action_confirm(self):
         """Confirm function of salon order"""
+        self._check_employee_availability()
         sequence_code = 'salon.order.sequence'
         order_date = str(self.date)
         order_date = order_date[0:10]
@@ -208,6 +250,7 @@ class SalonOrder(models.Model):
 
     def action_validate(self):
         """ Validate function of salon order"""
+        self._check_employee_availability()
         self.state = 'validate'
         
     def action_create_delivery(self):
