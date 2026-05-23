@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_salon_plan_order_tree" model="ir.ui.view">
+        <field name="name">salon.plan.order.list</field>
+        <field name="model">salon.plan.order</field>
+        <field name="arch" type="xml">
+            <list string="Plan Orders">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="plan_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirm'" decoration-success="state == 'validate'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_salon_plan_order_form" model="ir.ui.view">
+        <field name="name">salon.plan.order.form</field>
+        <field name="model">salon.plan.order</field>
+        <field name="arch" type="xml">
+            <form string="Plan Order">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_confirm_orders" string="Confirm Orders" type="object" class="oe_highlight" invisible="state != 'confirm'"/>
+                    <button name="action_create_invoice" string="Create Invoice" type="object" class="oe_highlight" invisible="state != 'validate'"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state in ['validate', 'invoiced', 'canceled']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate,invoiced"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_salon_orders" type="object" class="oe_stat_button" icon="fa-calendar">
+                            <field name="salon_order_count" widget="statinfo" string="Orders"/>
+                        </button>
+                        <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="invoice_count == 0">
+                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="plan_id" readonly="state != 'draft'"/>
+                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="start_date" readonly="state != 'draft'"/>
+                            <field name="end_date" readonly="state != 'draft'"/>
+                            <field name="start_time" widget="float_time" readonly="state != 'draft'"/>
+                            <field name="chair_id" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Treatment Orders" name="salon_orders" invisible="state == 'draft'">
+                            <field name="salon_order_ids">
+                                <list editable="bottom">
+                                    <field name="name" readonly="1"/>
+                                    <field name="date" readonly="1"/>
+                                    <field name="start_time"/>
+                                    <field name="chair_id" />
+                                    <field name="state" widget="badge" readonly="1"/>
+                                    <button name="action_confirm" string="Confirm" type="object" icon="fa-check" invisible="state != 'draft'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_salon_plan_order" model="ir.actions.act_window">
+        <field name="name">Plan Orders</field>
+        <field name="res_model">salon.plan.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Treatment Plan Order
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="salon_plan_order_menu_action" name="Plan Orders"
+              parent="salon_management.salon_management_salon_root"
+              action="action_salon_plan_order" sequence="27"/>
+</odoo>

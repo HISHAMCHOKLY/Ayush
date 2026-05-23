@@ -24,7 +24,7 @@
         <field name="name">salon.order.gantt</field>
         <field name="model">salon.order</field>
         <field name="arch" type="xml">
-            <gantt string="Salon Orders"
+            <gantt string="Treatment Orders"
                    date_start="start_time"
                    date_stop="end_time"
                    progress="time_taken_total"
@@ -105,7 +105,7 @@
                                     <a>Customer :</a>
                                     <field name="partner_id"/>
                                     <div style="float: right;">
-                                        <a>Chair :</a>
+                                        <a>Room :</a>
                                         <field name="chair_id"/>
                                     </div>
                                 </div>
@@ -216,7 +216,7 @@
                         <page string="Order Lines">
                             <field name="order_line_ids" mode="list,kanban"
                                    readonly="state != 'draft'">
-                                <form string="Salon Order Lines">
+                                <form string="Treatment Order Lines">
                                     <group>
                                         <group>
                                             <field name="product_id"/>
@@ -228,7 +228,7 @@
                                         </group>
                                     </group>
                                 </form>
-                                <list string="Salon Order Lines"
+                                <list string="Treatment Order Lines"
                                       editable="bottom">
                                     <field name="product_id"/>
                                     <field name="time_taken"
@@ -306,27 +306,27 @@
     </record>
     <!-- Salon order action-->
     <record id="salon_order_action" model="ir.actions.act_window">
-        <field name="name">Salon Orders</field>
+        <field name="name">Treatment Orders</field>
         <field name="res_model">salon.order</field>
         <field name="view_mode">gantt,kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No data yet!
             </p>
-            <p>Create order to manage salon orders.</p>
+            <p>Create order to manage Treatment orders.</p>
         </field>
     </record>
     <!-- Salon active orders dashboard action -->
     <record id="salon_active_orders_dashboard_action"
             model="ir.actions.act_window">
-        <field name="name">Salon Orders</field>
+        <field name="name">Treatment Orders</field>
         <field name="res_model">salon.order</field>
         <field name="view_mode">gantt,kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Booking!
             </p>
-            <p>Currently no booking for this chair</p>
+            <p>Currently no booking for this room</p>
         </field>
         <field name="domain">[('chair_id', '=', active_id)]</field>
     </record>

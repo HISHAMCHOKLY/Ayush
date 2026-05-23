@@ -3,9 +3,9 @@
     <data noupdate="1">
         <!-- Salon chair sequence-->
         <record id="salon_chair_sequence" model="ir.sequence">
-            <field name="name">Chair Sequence</field>
+            <field name="name">Room Sequence</field>
             <field name="code">salon_chair_sequence</field>
-            <field name="prefix">CHAIR-</field>
+            <field name="prefix">ROOM-</field>
             <field name="number_increment">1</field>
         </record>
     </data>

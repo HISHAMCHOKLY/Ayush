@@ -25,10 +25,10 @@ from odoo import api, fields, models
 class SalonOrderLine(models.Model):
     """Creates salon_order_line model to store salon orders"""
     _name = 'salon.order.line'
-    _description = 'Salon Order Lines'
+    _description = 'Treatment Order Lines'
 
     service_id = fields.Many2one('salon.service', string="Service",
-                                 help="Select salon services")
+                                 help="Select Treatment services")
     product_id = fields.Many2one('product.product', string="Service", domain=[('type', '=', 'service')])
     currency_id = fields.Many2one(
         'res.currency', string='Currency', required=True,
@@ -36,8 +36,8 @@ class SalonOrderLine(models.Model):
         help="Default currency")
     price = fields.Monetary(string="Price", help="Price of service")
     salon_order_id = fields.Many2one(
-        'salon.order', string="Salon Order", required=True, ondelete='cascade',
-        index=True, copy=False, help="select Salon order")
+        'salon.order', string="Treatment Order", required=True, ondelete='cascade',
+        index=True, copy=False, help="select Treatment order")
     price_subtotal = fields.Monetary(string='Subtotal', help="Total price")
     time_taken = fields.Float(string='Time Taken', help="Time taken for "
                                                         "service")

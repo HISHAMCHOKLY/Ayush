@@ -3,11 +3,11 @@ from odoo import fields, models
 
 class SalonOrderEquipment(models.Model):
     _name = 'salon.order.equipment'
-    _description = 'Salon Order Equipment'
+    _description = 'Treatment Order Equipment'
 
     salon_order_id = fields.Many2one(
         'salon.order', 
-        string="Salon Order", 
+        string="Treatment Order", 
         required=True, 
         ondelete='cascade'
     )

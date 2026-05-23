@@ -25,7 +25,7 @@ from odoo import api, fields, models
 class SalonChairUser(models.Model):
     """Model to store chair users """
     _name = 'salon.chair.user'
-    _description = 'Salon Chair User'
+    _description = 'Treatment Room User'
 
     read_only_checker = fields.Boolean(string="Checker", default=False,
                                        help="To check readonly")
@@ -37,8 +37,8 @@ class SalonChairUser(models.Model):
     end_date = fields.Datetime(string="End Date", default=False, help="Ending "
                                                                       "date")
     salon_chair_id = fields.Many2one(
-        'salon.chair', string="Chair", required=True,
-        ondelete='cascade', index=True, copy=False, help="Select salon chairs")
+        'salon.chair', string="Room", required=True,
+        ondelete='cascade', index=True, copy=False, help="Select Treatment rooms")
 
     @api.model_create_multi
     def create(self, val):

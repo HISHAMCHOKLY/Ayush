@@ -27,5 +27,5 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     user_salon_active = fields.Boolean(
-        string="Active Salon Users", default=False, help="To check whether user"
-                                                         " is salon user")
+        string="Active Treatment Users", default=False, help="To check whether user"
+                                                             " is Treatment user")

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!--    Salon booking form-->
-    <template id="salon_booking_form" name="Salon Booking">
+    <template id="salon_booking_form" name="Treatment Booking">
         <t t-call="website.layout">
             <div class="container chair_booking">
                 <div class="row s_nb_column_fixed ">
@@ -34,7 +34,7 @@
                         </table>
                     </div>
                     <div class="col-lg-6 s_title pt16 pb16">
-                        <h3>Book Your Chair</h3>
+                        <h3>Book Your Room</h3>
                         <form>
                             <div class="row s_nb_column_fixed">
                                 <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
@@ -88,13 +88,13 @@
                                     <div class="col-lg-5 s_title pt16 pb16"
                                          style="font-size: 12px;">
                                         (Select date &amp; time based on
-                                        availability of chair)
+                                        availability of room)
                                     </div>
                                 </div>
                             </div>
                             <div class="row s_nb_column_fixed">
                                 <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
-                                    CHAIR
+                                    ROOM
                                 </div>
                                 <div class="col-lg-10 s_title pt16 pb16 row">
                                     <div class="col-lg-5 s_title pt16 pb16">
@@ -109,7 +109,7 @@
                                     </div>
                                     <div class="col-lg-7 s_title pt16 pb16"
                                          style="font-size: 12px;">
-                                        (Select the chair that free in the
+                                        (Select the room that free in the
                                         preferred time)
                                     </div>
                                 </div>
@@ -149,7 +149,7 @@
                 <div>
                     <section id="chair_details">
                         <div class="container">
-                            <h3>Already Booked Chairs and Details</h3>
+                            <h3>Already Booked Rooms and Details</h3>
                             <hr/>
                             <div class="row s_nb_column_fixed">
                                 <div class="col-lg-12 s_title pt16 pb16">

@@ -26,10 +26,10 @@ from odoo import api, fields, models, _
 class SalonChair(models.Model):
     """Class to create 'salon.chair' to manage chairs in salon"""
     _name = 'salon.chair'
-    _description = 'Salon Chair'
+    _description = 'Salon Room'
 
-    name = fields.Char(string="Chair", required=True,
-                       default="New", help="Name for chair")
+    name = fields.Char(string="Room", required=True,
+                       default="New", help="Name for room")
     number_of_orders = fields.Integer(string="No.of Orders", help="Number of ")
     collection_today = fields.Float(string="Today's Collection", 
                                     help="Today's collection")
@@ -38,16 +38,16 @@ class SalonChair(models.Model):
         help="You can select the user from the Users Tab"
              "Last user from the Users Tab will be selected "
              "as the Current User.")
-    date = fields.Datetime(string="Date", help="Chair available date", required=True)
+    date = fields.Datetime(string="Date", help="Room available date", required=True)
     user_line = fields.One2many('salon.chair.user', 'salon_chair_id',
                                 string="Users", help="Salon chair users")
     total_time_taken_chair = fields.Float(string="Time Reserved(Hrs)",
                                           help="Reserved time")
-    active_booking_chairs = fields.Boolean(string="Active booking chairs",
-                                           help="Check is chair a active chair")
-    chair_created_user = fields.Integer(string="Salon Chair Created User",
+    active_booking_chairs = fields.Boolean(string="Active booking rooms",
+                                           help="Check is room a active room")
+    chair_created_user = fields.Integer(string="Salon Room Created User",
                                         default=lambda self: self._uid,
-                                        help="Chair created user")
+                                        help="Room created user")
 
     @api.model_create_multi
     def create(self, values):

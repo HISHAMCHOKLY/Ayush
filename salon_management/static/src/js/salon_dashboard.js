@@ -46,7 +46,7 @@ export class SalonDashboard extends Component {
         ev.stopPropagation();
         ev.preventDefault();
         this.env.services.action.doAction({
-            name: _t("Salon Bookings"),
+            name: _t("Treatment Bookings"),
             type: 'ir.actions.act_window',
             res_model: 'salon.booking',
             view_mode: 'list,form',
@@ -91,7 +91,7 @@ export class SalonDashboard extends Component {
         ev.stopPropagation();
         ev.preventDefault();
         this.env.services.action.doAction({
-            name: _t("Salon Orders"),
+            name: _t("Treatment Orders"),
             type: 'ir.actions.act_window',
             res_model: 'salon.order',
             view_mode: 'list,form,calendar',
@@ -106,7 +106,7 @@ export class SalonDashboard extends Component {
         ev.preventDefault();
         const active_id = ev.target.id;
         this.env.services.action.doAction({
-            name: _t("Chair Orders"),
+            name: _t("Room Orders"),
             type: 'ir.actions.act_window',
             res_model: 'salon.order',
             view_mode: 'gantt,kanban,list,form',
@@ -125,7 +125,7 @@ export class SalonDashboard extends Component {
         ev.preventDefault();
         const active_id = ev.target.id;
         this.env.services.action.doAction({
-            name: _t("Chair Orders"),
+            name: _t("Room Orders"),
             type: 'ir.actions.act_window',
             res_model: 'salon.chair',
             view_mode: 'form',

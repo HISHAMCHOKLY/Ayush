@@ -2,7 +2,7 @@
 <odoo>
     <!--    Salon chair action-->
     <record id="salon_chair_action" model="ir.actions.act_window">
-        <field name="name">Chairs</field>
+        <field name="name">Rooms</field>
         <field name="res_model">salon.chair</field>
         <field name="view_mode">list,form</field>
     </record>
@@ -30,7 +30,7 @@
                     <notebook>
                         <page string="Users">
                             <field name="user_line" mode="list">
-                                <list string="Salon User Lines"
+                                <list string="Treatment User Lines"
                                       editable="bottom" delete="false">
                                     <field name="read_only_checker"
                                            column_invisible="1"/>

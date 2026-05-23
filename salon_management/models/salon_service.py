@@ -25,7 +25,7 @@ from odoo import fields, models
 class SalonService(models.Model):
     """Creates 'salon.service' to store salon services"""
     _name = 'salon.service'
-    _description = 'Salon Service'
+    _description = 'Treatment Service'
 
     name = fields.Char(string="Name", required=True, help="Name of service")
     currency_id = fields.Many2one(comodel_name='res.currency',

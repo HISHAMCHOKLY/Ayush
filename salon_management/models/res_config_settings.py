@@ -38,11 +38,11 @@ class ResConfigSettings(models.TransientModel):
         return self.env['salon.holiday'].search([('holiday', '=', True)])
 
     salon_booking_chair_ids = fields.Many2many(
-        'salon.chair', string="Booking Chairs", default=booking_chairs,
-        help="Booking chairs")
+        'salon.chair', string="Booking Rooms", default=booking_chairs,
+        help="Booking rooms")
     salon_holiday_ids = fields.Many2many('salon.holiday', string="Holidays",
                                          default=return_holidays,
-                                         help="Holidays of salon")
+                                         help="Holidays of Treatment")
 
     def execute(self):
         """Update boolean fields of holiday and chair"""

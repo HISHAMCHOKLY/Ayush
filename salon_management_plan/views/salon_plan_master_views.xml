@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_salon_plan_master_tree" model="ir.ui.view">
+        <field name="name">salon.plan.master.list</field>
+        <field name="model">salon.plan.master</field>
+        <field name="arch" type="xml">
+            <list string="Plan Master">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="amount"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_salon_plan_master_form" model="ir.ui.view">
+        <field name="name">salon.plan.master.form</field>
+        <field name="model">salon.plan.master</field>
+        <field name="arch" type="xml">
+            <form string="Plan Master">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Plan Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
+                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_salon_plan_master" model="ir.actions.act_window">
+        <field name="name">Plan Master</field>
+        <field name="res_model">salon.plan.master</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Treatment Plan
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="salon_plan_master_menu_action"
+              parent="salon_management.salon_management_settings_menu_root"
+              name="Plan Master" action="action_salon_plan_master"
+              sequence="10"/>
+</odoo>

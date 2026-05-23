@@ -25,9 +25,9 @@ from odoo import fields, models
 class SalonWorkingHours(models.Model):
     """'Salon working hours' to store working hours of salon"""
     _name = 'salon.working.hours'
-    _description = 'Salon Working Hours'
+    _description = 'Treatment Working Hours'
 
     name = fields.Char(string="Name", help="Name of working hours", required=True)
     from_time = fields.Float(string="Starting Time", help="Starting time of "
-                                                          "salon")
-    to_time = fields.Float(string="Closing Time", help="Salon work ending time")
+                                                          "Treatment")
+    to_time = fields.Float(string="Closing Time", help="Treatment work ending time")

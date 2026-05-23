@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_salon_plan_master_user,salon.plan.master.user,model_salon_plan_master,salon_management.group_salon_user,1,1,1,1
+access_salon_plan_order_user,salon.plan.order.user,model_salon_plan_order,salon_management.group_salon_user,1,1,1,1
+access_salon_plan_master_manager,salon.plan.master.manager,model_salon_plan_master,salon_management.group_salon_manager,1,1,1,1
+access_salon_plan_order_manager,salon.plan.order.manager,model_salon_plan_order,salon_management.group_salon_manager,1,1,1,1

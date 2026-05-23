@@ -53,7 +53,7 @@
     </record>
     <!-- Salon booking action-->
     <record id="salon_booking_action" model="ir.actions.act_window">
-        <field name="name">Salon Bookings</field>
+        <field name="name">Treatment Bookings</field>
         <field name="res_model">salon.booking</field>
         <field name="view_mode">list,form</field>
     </record>

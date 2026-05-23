@@ -3,7 +3,7 @@
     <data>
         <!-- Product template demo data-->
         <record id="salon_service_product_01" model="product.template">
-            <field name="name">Salon Service</field>
+            <field name="name">Treatment Service</field>
             <field name="type">service</field>
         </record>
     </data>

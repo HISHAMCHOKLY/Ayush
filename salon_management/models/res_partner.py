@@ -27,6 +27,6 @@ class ResPartner(models.Model):
         partner"""
     _inherit = 'res.partner'
 
-    partner_salon = fields.Boolean(string="Is a Salon Partner",
-                                   help="Field to check is partner a salon "
+    partner_salon = fields.Boolean(string="Is a Treatment Partner",
+                                   help="Field to check is partner a Treatment "
                                         "partner")

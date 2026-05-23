@@ -3,7 +3,7 @@
     <data>
 <!--        Salon approved mail template-->
         <record id="mail_template_salon_approved" model="mail.template">
-            <field name="name">Salon Approved E-mail</field>
+            <field name="name">Treatment Approved E-mail</field>
             <field name="email_from">{{ object.company_id and object.company_id.email or '' }}</field>
             <field name="subject">Congrats {{ object.name }}</field>
             <field name="email_to">{{ object.email }}</field>
@@ -20,7 +20,7 @@
         </record>
         <!--        Salon rejecting mail template-->
         <record id="mail_template_salon_rejected" model="mail.template">
-            <field name="name">Salon Rejected E-mail</field>
+            <field name="name">Treatment Rejected E-mail</field>
             <field name="email_from">{{ object.company_id and object.company_id.email or '' }}</field>
             <field name="subject">We are Sorry {{ object.name }}</field>
             <field name="email_to">{{ object.email }}</field>

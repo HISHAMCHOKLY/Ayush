@@ -27,7 +27,7 @@ from datetime import datetime, time
 class SalonBooking(models.Model):
     """Creates 'salon booking' to create salon bookings"""
     _name = 'salon.booking'
-    _description = 'Salon Booking'
+    _description = 'Treatment Booking'
 
     name = fields.Char(string="Name", required=True, help="Name of customer")
     state = fields.Selection(string="State", default="draft",
@@ -42,16 +42,16 @@ class SalonBooking(models.Model):
     service_ids = fields.Many2many(comodel_name='salon.service',
                                    string="Services",
                                    help="Salon services")
-    chair_id = fields.Many2one('salon.chair', string="Chair",
-                               required=True, help="Select the chair for "
+    chair_id = fields.Many2one('salon.chair', string="Room",
+                               required=True, help="Select the room for "
                                                    "booking")
     company_id = fields.Many2one(comodel_name='res.company', string='Company',
                                  default=lambda self: self.env.company,
                                  help="Default company")
     filtered_order_ids = fields.Many2many(comodel_name='salon.order',
-                                          string="Salon Orders",
+                                          string="Treatment Orders",
                                           compute="_compute_filtered_order_ids",
-                                          help="Orders for each salon")
+                                          help="Orders for each Treatment")
 
     def _compute_filtered_order_ids(self):
         """Computes the filtered_order_ids field"""

@@ -31,7 +31,7 @@
                 <i class="fa fa-calendar"/>
               </div>
                 <div class="stat-content">
-                <div class="stat-text">Salon Orders</div>
+                <div class="stat-text">Treatment Orders</div>
                     <div class="stat-digit" t-ref="orders_count">
                 </div>
               </div>
@@ -65,7 +65,7 @@
                 <i class="fa fa-user "/>
               </div>
                 <div class="stat-content">
-                <div class="stat-text">Salon Clients</div>
+                <div class="stat-text">Treatment Clients</div>
                     <div class="stat-digit" t-ref="clients_count">
                 </div>
               </div>

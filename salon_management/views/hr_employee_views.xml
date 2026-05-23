@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='active_group']" position="before">
-                <group string="Salon">
+                <group string="Treatment">
                     <field name="is_doctor"/>
                 </group>
             </xpath>

@@ -2,21 +2,21 @@
 <odoo>
     <data>
         <!--  Salon management menus -->
-        <menuitem id="salon_management_menu_root" name="Salon"
+        <menuitem id="salon_management_menu_root" name="Treatment"
                   groups="salon_management.group_salon_user"
                   action="salon_order_action"
                   web_icon="salon_management,static/description/icon.png"/>
         <menuitem id="salon_order_menu_action"
-                  parent="salon_management_menu_root" name="Salon Orders"
+                  parent="salon_management_menu_root" name="Treatment Orders"
                   sequence="0"
                   action="salon_order_action"/>
         <menuitem id="salon_dashboard_menu_action"
                   name="Dashboard" parent="salon_management_menu_root"
                   action="salon_management_client_action"
                   sequence="1"/>
-        <menuitem id="salon_management_salon_root" name="Salon"
+        <menuitem id="salon_management_salon_root" name="Treatment"
                   parent="salon_management_menu_root"/>
-        <menuitem id="salon_chair_menu_action" name="Chair"
+        <menuitem id="salon_chair_menu_action" name="Room"
                   parent="salon_management_salon_root"
                   action="salon_chair_action"/>
 

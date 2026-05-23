@@ -25,7 +25,7 @@ from odoo import fields, models
 class SalonHoliday(models.Model):
     """Creates 'salon.holiday' to store holidays of salon"""
     _name = 'salon.holiday'
-    _description = 'Salon Holiday'
+    _description = 'Treatment Holiday'
 
     name = fields.Char(string="Name", help="Name of holiday")
     holiday = fields.Boolean(string="Holiday", help="To check holiday")

@@ -28,10 +28,10 @@ from odoo.exceptions import UserError, ValidationError
 class SalonOrder(models.Model):
     """Model to create salon orders"""
     _name = 'salon.order'
-    _description = 'Salon Order'
+    _description = 'Treatment Order'
 
-    name = fields.Char(string='Salon', required=True, copy=False, readonly=True,
-                       default='Draft Salon Order', help="Name of salon order")
+    name = fields.Char(string='Treatment', required=True, copy=False, readonly=True,
+                       default='Draft Treatment Order', help="Name of Treatment order")
     start_time = fields.Datetime(
         string="Start time", default=fields.Datetime.now, required=True,
         help="Start time of the order")
@@ -48,8 +48,8 @@ class SalonOrder(models.Model):
         'res.currency', string='Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id.id,
         help="Currency used in the order")
-    chair_id = fields.Many2one('salon.chair', string="Chair",
-                               required=True, help="Chair for the current "
+    chair_id = fields.Many2one('salon.chair', string="Room",
+                               required=True, help="Room for the current "
                                                    "order")
     price_subtotal = fields.Monetary(string='Total', readonly=True, store=True,
                                      compute='_compute_price_subtotal',
@@ -61,7 +61,7 @@ class SalonOrder(models.Model):
     order_line_ids = fields.One2many(comodel_name='salon.order.line',
                                      inverse_name='salon_order_id',
                                      string="Order Lines", copy=True,
-                                     help='Salon order line for add '
+                                     help='Treatment order line for add '
                                           'list of services', required=True)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -69,15 +69,15 @@ class SalonOrder(models.Model):
         ('validate', 'Validated'),
         ('invoiced', 'Invoiced'),
         ('canceled', 'Canceled')
-    ], string='Status', default='draft', copy=False, help="State of the salon order")
+    ], string='Status', default='draft', copy=False, help="State of the Treatment order")
     inv_stage_identifier = fields.Boolean(string="Stage Identifier",
                                           help="Field to detect stage")
     booking_identifier = fields.Boolean(string="Booking Identifier",
                                         help="Field to identify booking")
-    user_id = fields.Many2one('res.users', string="Chair User")
-    salon_order_created_user = fields.Integer(string="Salon Order Created User",
+    user_id = fields.Many2one('res.users', string="Room User")
+    salon_order_created_user = fields.Integer(string="Treatment Order Created User",
                                               default=lambda self: self._uid,
-                                              help="The user whom the salon"
+                                              help="The user whom the Treatment"
                                                    " order created.")
     count = fields.Integer(string='Invoices', compute='_compute_count',
                            help="The count of the invoice")
@@ -87,11 +87,11 @@ class SalonOrder(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_delivery_count', help="The count of the delivery")
     employee_ids = fields.Many2many(
         'hr.employee', string="Employees",
-        help="Employees assigned to this salon order")
+        help="Employees assigned to this Treatment order")
     doctor_id = fields.Many2one(
         'hr.employee', string="Doctor",
         domain="[('is_doctor', '=', True)]",
-        help="Doctor assigned to this salon order")
+        help="Doctor assigned to this Treatment order")
 
     def _compute_delivery_count(self):
         """Compute the count of devalidation_controllerlivery orders"""
