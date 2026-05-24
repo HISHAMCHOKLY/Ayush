@@ -6,7 +6,9 @@
         <field name="arch" type="xml">
             <list string="Plan Master">
                 <field name="name"/>
-                <field name="product_id"/>
+                <field name="product_ids" widget="many2many_tags"/>
+                <field name="no_of_persons"/>
+                <field name="validity_months"/>
                 <field name="amount"/>
                 <field name="currency_id" column_invisible="True"/>
             </list>
@@ -26,7 +28,9 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id"/>
+                            <field name="product_ids" widget="many2many_tags"/>
+                            <field name="no_of_persons"/>
+                            <field name="validity_months"/>
                         </group>
                         <group>
                             <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>

@@ -11,6 +11,7 @@
         'data/salon_plan_sequence.xml',
         'views/salon_plan_master_views.xml',
         'views/salon_plan_order_views.xml',
+        'views/salon_order_views.xml',
     ],
     'installable': True,
     'application': False,

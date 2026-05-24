@@ -8,9 +8,11 @@
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="plan_id"/>
+                <field name="no_of_persons"/>
+                <field name="type"/>
                 <field name="start_date"/>
                 <field name="end_date"/>
-                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirm'" decoration-success="state == 'validate'"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirm'" decoration-success="state == 'complete'"/>
             </list>
         </field>
     </record>
@@ -22,10 +24,11 @@
             <form string="Plan Order">
                 <header>
                     <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                    <button name="action_confirm_orders" string="Confirm Orders" type="object" class="oe_highlight" invisible="state != 'confirm'"/>
-                    <button name="action_create_invoice" string="Create Invoice" type="object" class="oe_highlight" invisible="state != 'validate'"/>
-                    <button name="action_cancel" string="Cancel" type="object" invisible="state in ['validate', 'invoiced', 'canceled']"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate,invoiced"/>
+                    <button name="action_create_treatment_order" string="Create Order" type="object" class="oe_highlight" invisible="state != 'confirm'"/>
+                    <button name="action_create_invoice" string="Create Invoice" type="object" class="oe_highlight" invisible="state not in ['confirm', 'complete'] or invoice_id"/>
+                    <button name="action_complete" string="Complete" type="object" class="oe_highlight" invisible="state != 'confirm'"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state in ['complete', 'canceled']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,complete"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -45,17 +48,31 @@
                         <group>
                             <field name="partner_id" readonly="state != 'draft'"/>
                             <field name="plan_id" readonly="state != 'draft'"/>
+                            <field name="no_of_persons"/>
+                            <field name="type" readonly="state != 'draft'"/>
                             <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="currency_id" invisible="1"/>
+                            <field name="invoice_id" invisible="1"/>
                         </group>
                         <group>
                             <field name="start_date" readonly="state != 'draft'"/>
                             <field name="end_date" readonly="state != 'draft'"/>
-                            <field name="start_time" widget="float_time" readonly="state != 'draft'"/>
-                            <field name="chair_id" readonly="state != 'draft'"/>
                         </group>
                     </group>
+                    <group invisible="no_of_persons &lt;= 1">
+                        <field name="member_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                    </group>
                     <notebook>
+                        <page string="Services" name="services">
+                            <field name="service_line_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="allowed_count"/>
+                                    <field name="total_taken" readonly="1"/>
+                                    <field name="available_count" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="Treatment Orders" name="salon_orders" invisible="state == 'draft'">
                             <field name="salon_order_ids">
                                 <list editable="bottom">
@@ -65,6 +82,17 @@
                                     <field name="chair_id" />
                                     <field name="state" widget="badge" readonly="1"/>
                                     <button name="action_confirm" string="Confirm" type="object" icon="fa-check" invisible="state != 'draft'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Treatment Lines" name="treatment_lines">
+                            <field name="treatment_line_ids" readonly="1">
+                                <list>
+                                    <field name="salon_order_id" string="Order Reference"/>
+                                    <field name="date" string="Date"/>
+                                    <field name="product_id" string="Service"/>
+                                    <field name="time_taken" widget="float_time"/>
+                                    <field name="price" widget="monetary"/>
                                 </list>
                             </field>
                         </page>

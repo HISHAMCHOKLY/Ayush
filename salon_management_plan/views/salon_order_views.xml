@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_salon_order_form_inherit_plan" model="ir.ui.view">
+        <field name="name">salon.order.form.inherit.plan</field>
+        <field name="model">salon.order</field>
+        <field name="inherit_id" ref="salon_management.salon_order_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="plan_order_id" readonly="state != 'draft'"/>
+                <field name="plan_member_ids" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">plan_order_id and [('id', 'in', plan_member_ids)] or [('partner_salon', '=', True)]</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
