@@ -60,7 +60,7 @@
                         </group>
                     </group>
                     <group invisible="no_of_persons &lt;= 1">
-                        <field name="member_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                        <field name="member_ids" widget="many2many_tags"/>
                     </group>
                     <notebook>
                         <page string="Services" name="services">

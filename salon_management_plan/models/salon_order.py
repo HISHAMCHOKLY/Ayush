@@ -7,6 +7,25 @@ class SalonOrder(models.Model):
 
     plan_order_id = fields.Many2one('salon.plan.order', string="Plan Order", help="Plan order from which this order was created")
     plan_member_ids = fields.Many2many('res.partner', related='plan_order_id.member_ids', string="Plan Members")
+    is_care_of = fields.Boolean(string="Care Of", help="Check if this order is care of another member of the plan")
+    care_of_partner_id = fields.Many2one('res.partner', string="Care Of Customer", help="Select a member from the plan order selected members")
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        if self.partner_id:
+            if self.plan_order_id and self.partner_id not in self.plan_order_id.member_ids:
+                self.plan_order_id = False
+                self.is_care_of = False
+                self.care_of_partner_id = False
+        else:
+            self.plan_order_id = False
+            self.is_care_of = False
+            self.care_of_partner_id = False
+
+    @api.onchange('is_care_of', 'plan_order_id')
+    def _onchange_is_care_of(self):
+        if not self.is_care_of or not self.plan_order_id:
+            self.care_of_partner_id = False
 
     @api.constrains('partner_id', 'plan_order_id')
     def _check_partner_in_plan_members(self):
@@ -16,6 +35,15 @@ class SalonOrder(models.Model):
                     raise ValidationError(_(
                         "The selected customer '%s' is not a member of the selected Plan Order '%s'."
                     ) % (order.partner_id.name, order.plan_order_id.name))
+
+    @api.constrains('is_care_of', 'care_of_partner_id', 'plan_order_id')
+    def _check_care_of_partner_in_plan_members(self):
+        for order in self:
+            if order.is_care_of and order.plan_order_id and order.care_of_partner_id:
+                if order.care_of_partner_id not in order.plan_order_id.member_ids:
+                    raise ValidationError(_(
+                        "The selected Care Of Customer '%s' is not a member of the selected Plan Order '%s'."
+                    ) % (order.care_of_partner_id.name, order.plan_order_id.name))
 
     @api.constrains('date', 'plan_order_id')
     def _check_plan_order_dates(self):
@@ -41,11 +69,15 @@ class SalonOrder(models.Model):
                 if line.product_id in plan_products:
                     line.price = 0.0
                     line.price_subtotal = 0.0
+            if self.care_of_partner_id and self.care_of_partner_id not in self.plan_order_id.member_ids:
+                self.care_of_partner_id = False
         else:
             for line in self.order_line_ids:
                 if line.product_id:
                     line.price = line.product_id.lst_price
                     line.price_subtotal = line.product_id.lst_price
+            self.is_care_of = False
+            self.care_of_partner_id = False
 
     def action_confirm(self):
         for order in self:
