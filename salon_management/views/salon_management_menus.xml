@@ -19,6 +19,10 @@
         <menuitem id="salon_chair_menu_action" name="Room"
                   parent="salon_management_salon_root"
                   action="salon_chair_action"/>
+        <menuitem id="salon_patient_menu_action" name="Patients"
+                  parent="salon_management_salon_root"
+                  action="salon_management.action_patient_partner_form"
+                  sequence="2"/>
                   
         <record id="salon_product_template_action" model="ir.actions.act_window">
             <field name="name">Products</field>

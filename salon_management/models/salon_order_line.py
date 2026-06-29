@@ -39,8 +39,8 @@ class SalonOrderLine(models.Model):
         'salon.order', string="Treatment Order", required=True, ondelete='cascade',
         index=True, copy=False, help="select Treatment order")
     price_subtotal = fields.Monetary(string='Subtotal', help="Total price")
-    time_taken = fields.Float(string='Time Taken', help="Time taken for "
-                                                        "service")
+    time_taken = fields.Float(string='Duration', help="Duration of "
+                                                      "service")
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

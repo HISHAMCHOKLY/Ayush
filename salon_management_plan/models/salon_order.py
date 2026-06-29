@@ -8,7 +8,7 @@ class SalonOrder(models.Model):
     plan_order_id = fields.Many2one('salon.plan.order', string="Plan Order", help="Plan order from which this order was created")
     plan_member_ids = fields.Many2many('res.partner', related='plan_order_id.member_ids', string="Plan Members")
     is_care_of = fields.Boolean(string="Care Of", help="Check if this order is care of another member of the plan")
-    care_of_partner_id = fields.Many2one('res.partner', string="Care Of Customer", help="Select a member from the plan order selected members")
+    care_of_partner_id = fields.Many2one('res.partner', string="Care Of Patient", help="Select a member from the plan order selected members")
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -33,7 +33,7 @@ class SalonOrder(models.Model):
             if order.plan_order_id and order.partner_id:
                 if order.partner_id not in order.plan_order_id.member_ids:
                     raise ValidationError(_(
-                        "The selected customer '%s' is not a member of the selected Plan Order '%s'."
+                        "The selected patient '%s' is not a member of the selected Plan Order '%s'."
                     ) % (order.partner_id.name, order.plan_order_id.name))
 
     @api.constrains('is_care_of', 'care_of_partner_id', 'plan_order_id')
@@ -42,7 +42,7 @@ class SalonOrder(models.Model):
             if order.is_care_of and order.plan_order_id and order.care_of_partner_id:
                 if order.care_of_partner_id not in order.plan_order_id.member_ids:
                     raise ValidationError(_(
-                        "The selected Care Of Customer '%s' is not a member of the selected Plan Order '%s'."
+                        "The selected Care Of Patient '%s' is not a member of the selected Plan Order '%s'."
                     ) % (order.care_of_partner_id.name, order.plan_order_id.name))
 
     @api.constrains('date', 'plan_order_id')

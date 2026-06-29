@@ -10,7 +10,7 @@ class SalonPlanOrder(models.Model):
     _description = 'Treatment Plan Order'
 
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, default=lambda self: _('New'))
-    partner_id = fields.Many2one('res.partner', string='Customer', required=True)
+    partner_id = fields.Many2one('res.partner', string='Patient', required=True, domain="[('partner_salon', '=', True)]")
     plan_id = fields.Many2one('salon.plan.master', string='Plan', required=True)
     amount = fields.Monetary(string='Amount', related='plan_id.amount', readonly=True)
     currency_id = fields.Many2one(related='plan_id.currency_id')
@@ -33,7 +33,7 @@ class SalonPlanOrder(models.Model):
         ('2_hand', '2 Hand'),
         ('4_hand', '4 Hand')
     ], string='Type', default='2_hand', required=True)
-    last_partner_id = fields.Many2one('res.partner', string='Last Customer', store=False)
+    last_partner_id = fields.Many2one('res.partner', string='Last Patient', store=False)
     service_line_ids = fields.One2many('salon.plan.order.service', 'plan_order_id', string='Services')
     treatment_line_ids = fields.One2many('salon.order.line', 'plan_order_id', string='Treatment Lines', readonly=True)
 

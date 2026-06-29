@@ -29,14 +29,13 @@
                    date_stop="end_time"
                    progress="time_taken_total"
                    default_group_by="chair_id"
-                   color="color"
                    total_row="True"
                    default_scale="day"
                    create="1">
                 <templates>
                     <div t-name="gantt-popover">
                         <div>
-                            <strong>Customer  — </strong> <t t-esc="partner_id[1]"/>
+                            <strong>Patient  — </strong> <t t-esc="partner_id[1]"/>
                         </div>
                         <div>
                             <strong>Start  — </strong> <t t-esc="start_time.toFormat('f')"/>
@@ -66,12 +65,11 @@
             <kanban default_group_by="state"
                     class="o_kanban_small_column" quick_create="false"
                     on_create="quick_create">
-                <field name="color"/>
                 <field name="state"/>
                 <field name="currency_id" invisible="1"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                        <div class="oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown">
                                 <a role="button"
                                    class="dropdown-toggle o-no-caret btn"
@@ -91,8 +89,6 @@
                                            class="dropdown-item">Delete
                                         </a>
                                     </t>
-                                    <ul class="oe_kanban_colorpicker"
-                                        data-field="color"/>
                                 </div>
                             </div>
                             <div class="oe_kanban_content">
@@ -102,7 +98,7 @@
                                     </strong>
                                 </div>
                                 <div class="text-muted">
-                                    <a>Customer :</a>
+                                    <a>Patient :</a>
                                     <field name="partner_id"/>
                                     <div style="float: right;">
                                         <a>Room :</a>
@@ -207,7 +203,6 @@
                             <field name="inv_stage_identifier"
                                    invisible="1"/>
                             <field name="time_taken_total" invisible="1"/>
-                            <field name="color"/>
                             <field name="start_time"/>
                             <field name="end_time"/>
                         </group>

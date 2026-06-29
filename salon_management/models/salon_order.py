@@ -38,12 +38,10 @@ class SalonOrder(models.Model):
     end_time = fields.Datetime(string="End time", help="End time of the order")
     date = fields.Datetime(string="Date", required=True,
                            default=fields.Datetime.now, help="Registering date")
-    color = fields.Integer(string="Color",
-                           help="Color for the order")
     partner_id = fields.Many2one(
-        'res.partner', string="Customer", required=False,
-        help="If the customer is a regular customer, then you can add the"
-             " customer in your database")
+        'res.partner', string="Patient", required=False,
+        help="If the patient is a regular patient, then you can add the"
+             " patient in your database")
     currency_id = fields.Many2one(
         'res.currency', string='Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id.id,
@@ -86,8 +84,8 @@ class SalonOrder(models.Model):
     equipment_line_ids = fields.One2many('salon.order.equipment', 'salon_order_id', string="Equipments", compute='_compute_equipment_ids', store=True, readonly=False)
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_delivery_count', help="The count of the delivery")
     employee_ids = fields.Many2many(
-        'hr.employee', string="Employees",
-        help="Employees assigned to this Treatment order")
+        'hr.employee', string="Therapists",
+        help="Therapists assigned to this Treatment order")
     doctor_id = fields.Many2one(
         'hr.employee', string="Doctor",
         domain="[('is_doctor', '=', True)]",
@@ -99,7 +97,7 @@ class SalonOrder(models.Model):
             order.delivery_count = self.env['stock.picking'].search_count([('origin', '=', order.name)])
 
     def _check_employee_availability(self):
-        """Check if the assigned employees are already booked on
+        """Check if the assigned therapists are already booked on
         another confirmed or validated order during the same time period."""
         for order in self:
             if not order.employee_ids:
@@ -117,18 +115,18 @@ class SalonOrder(models.Model):
                 ]
             conflicting_orders = self.env['salon.order'].search(domain)
             if conflicting_orders:
-                # Find which employees are conflicting
+                # Find which therapists are conflicting
                 conflicting_employees = order.employee_ids.filtered(
                     lambda emp: emp.id in conflicting_orders.mapped('employee_ids').ids
                 )
                 employee_names = ', '.join(conflicting_employees.mapped('name'))
                 order_names = ', '.join(conflicting_orders.mapped('name'))
                 raise ValidationError(
-                    _("The following employee(s) are already assigned to "
+                    _("The following therapist(s) are already assigned to "
                       "confirmed/validated order(s) during this time period:\n\n"
-                      "Employee(s): %s\n"
+                      "Therapist(s): %s\n"
                       "Conflicting Order(s): %s\n\n"
-                      "Please choose different employees or adjust the time.",
+                      "Please choose different therapists or adjust the time.",
                       employee_names, order_names)
                 )
 

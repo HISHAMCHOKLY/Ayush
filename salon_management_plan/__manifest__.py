@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Treatment Management Plan',
-    'version': '18.0.1.0.1',
+    'version': '18.0.1.0.2',
     'category': 'Services',
     'summary': 'Add Plan Master and Plan Treatment Order features',
     'description': 'This module adds the ability to create Treatment plans and automatically generate Treatment orders for a specified date range.',

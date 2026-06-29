@@ -21,7 +21,7 @@
 ################################################################################
 {
     'name': 'Beauty Spa Management',
-    'version': '18.0.1.0.5',
+    'version': '18.0.1.0.6',
     "category": "Services",
     'summary': 'Beauty Parlour Management with Online Booking System',
     'description': 'This module to helps your customers to do the online '
