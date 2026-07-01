@@ -15,6 +15,11 @@
                 <field name="time_taken_total" widget="float_time"/>
                 <field name="price_subtotal" widget="monetary"/>
                 <field name="invoice_state" widget="badge"/>
+                <field name="invoice_payment_state" widget="badge"
+                       decoration-success="invoice_payment_state == 'paid'"
+                       decoration-info="invoice_payment_state == 'in_payment'"
+                       decoration-warning="invoice_payment_state == 'partial'"
+                       invisible="not invoice_id"/>
                 <field name="state"/>
             </list>
         </field>
@@ -173,6 +178,14 @@
                                    string="Delivery"/>
                         </button>
                     </div>
+                    <widget name="web_ribbon" title="Paid" bg_color="text-bg-success"
+                            invisible="invoice_payment_state != 'paid'"/>
+                    <widget name="web_ribbon" title="In Payment" bg_color="text-bg-info"
+                            invisible="invoice_payment_state != 'in_payment'"/>
+                    <widget name="web_ribbon" title="Partial" bg_color="text-bg-warning"
+                            invisible="invoice_payment_state != 'partial'"/>
+                    <widget name="web_ribbon" title="Reversed" bg_color="text-bg-danger"
+                            invisible="invoice_payment_state != 'reversed'"/>
                     <group>
                         <group>
                             <field name="partner_id"
@@ -191,6 +204,7 @@
                             <field name="currency_id" invisible="1"/>
                             <field name="invoice_id" readonly="1"/>
                             <field name="invoice_state" invisible="not invoice_id"/>
+                            <field name="invoice_payment_state" invisible="not invoice_id"/>
                         </group>
                         <group>
                             <field name="booking_identifier" invisible="1"/>

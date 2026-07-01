@@ -81,6 +81,7 @@ class SalonOrder(models.Model):
                            help="The count of the invoice")
     invoice_id = fields.Many2one('account.move', string="Invoice")
     invoice_state = fields.Selection(related='invoice_id.state', string="Invoice State", store=True)
+    invoice_payment_state = fields.Selection(related='invoice_id.payment_state', string="Invoice Payment State", store=True)
     equipment_line_ids = fields.One2many('salon.order.equipment', 'salon_order_id', string="Equipments", compute='_compute_equipment_ids', store=True, readonly=False)
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_delivery_count', help="The count of the delivery")
     employee_ids = fields.Many2many(
