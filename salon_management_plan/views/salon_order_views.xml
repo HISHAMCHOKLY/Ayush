@@ -8,8 +8,6 @@
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="plan_order_id" readonly="state != 'draft'" domain="[('member_ids', 'in', partner_id), ('state', '=', 'confirm')]"/>
                 <field name="plan_member_ids" invisible="1"/>
-                <field name="is_care_of" readonly="state != 'draft'" invisible="not plan_order_id"/>
-                <field name="care_of_partner_id" readonly="state != 'draft'" invisible="not plan_order_id or not is_care_of" required="is_care_of" domain="[('id', 'in', plan_member_ids)]" options="{'no_create': True}"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="domain">[('partner_salon', '=', True)]</attribute>

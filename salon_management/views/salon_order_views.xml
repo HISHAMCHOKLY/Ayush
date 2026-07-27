@@ -188,9 +188,15 @@
                             invisible="invoice_payment_state != 'reversed'"/>
                     <group>
                         <group>
+                            <field name="patient_type" widget="radio" options="{'horizontal': true}" readonly="state != 'draft'"/>
                             <field name="partner_id"
                                    domain="[('partner_salon','=',True)]"
                                    readonly="state != 'draft'"/>
+                            <field name="care_of_partner_id"
+                                   readonly="state != 'draft'"
+                                   invisible="patient_type != 'care_of'"
+                                   required="patient_type == 'care_of'"
+                                   options="{'no_create': True}"/>
                             <field name="chair_id"
                                    domain="[('active_booking_chairs','!=',True)]"
                                    readonly="state != 'draft'"

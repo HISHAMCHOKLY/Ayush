@@ -82,6 +82,15 @@ class SalonOrder(models.Model):
     invoice_id = fields.Many2one('account.move', string="Invoice")
     invoice_state = fields.Selection(related='invoice_id.state', string="Invoice State", store=True)
     invoice_payment_state = fields.Selection(related='invoice_id.payment_state', string="Invoice Payment State", store=True)
+    patient_type = fields.Selection([
+        ('self', 'Self'),
+        ('care_of', 'Care Of')
+    ], string="Patient Type", default='self', required=True, help="Select if the order is for self or care of someone else.")
+    care_of_partner_id = fields.Many2one(
+        'res.partner', string="Care Of Patient",
+        domain="[('parent_id', '=', partner_id)]",
+        help="Select a partner whose parent matches the partner in the salon order."
+    )
     equipment_line_ids = fields.One2many('salon.order.equipment', 'salon_order_id', string="Equipments", compute='_compute_equipment_ids', store=True, readonly=False)
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_delivery_count', help="The count of the delivery")
     employee_ids = fields.Many2many(
@@ -309,6 +318,13 @@ class SalonOrder(models.Model):
         """Onchange function of chair_id field"""
         if 'active_id' in self._context.keys():
             self.chair_id = self._context['active_id']
+
+    @api.onchange('patient_type', 'partner_id')
+    def _onchange_patient_type_partner_id(self):
+        if self.patient_type != 'care_of' or not self.partner_id:
+            self.care_of_partner_id = False
+        elif self.care_of_partner_id and self.care_of_partner_id.parent_id != self.partner_id:
+            self.care_of_partner_id = False
 
     def action_create_invoice(self):
         """Function to create invoice from salon order lines"""
