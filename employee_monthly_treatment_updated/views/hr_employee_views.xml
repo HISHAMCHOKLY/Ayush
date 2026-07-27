@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_employee_form_monthly_treatment" model="ir.ui.view">
+        <field name="name">hr.employee.form.monthly.treatment</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Treatments History">
+                    <group>
+
+                        <field name="treatment_count" readonly="1"/>
+                        <field name="monthly_treatment_count" readonly="1"/>
+
+                    </group>
+
+                    <field name="treatment_ids" readonly="1" widget="one2many_search">
+                        <list>
+                            <field name="date" optional="show"/>
+                            <field name="name" optional="show"/>
+                            <field name="partner_id" optional="show"/>
+                            <field name="price_subtotal" optional="show"/>
+                            <field name="state" optional="show"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Commission History">
+                    <group>
+                        <field name="total_commission_amount" readonly="1"/>
+                        <field name="month_commission_amount" readonly="1"/>
+                    </group>
+                    <field name="treatment_ids" readonly="1" widget="one2many_search">
+                        <list>
+                            <field name="date" optional="show"/>
+                            <field name="name" optional="show"/>
+                            <field name="partner_id" optional="show"/>
+                            <field name="price_subtotal" optional="show"/>
+                            <field name="state" optional="show"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+
+    <record id="product_template_form_commission" model="ir.ui.view">
+        <field name="name">product.template.form.commission</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='categ_id']" position="after">
+
+                <field name="commission_percentage"/>
+
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
