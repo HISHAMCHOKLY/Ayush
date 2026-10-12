@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <record id="room_1" model="treatment.room"><field name="name">Room 1</field><field name="sequence">10</field></record>
+  <record id="room_2" model="treatment.room"><field name="name">Room 2</field><field name="sequence">20</field></record>
+  <record id="room_3" model="treatment.room"><field name="name">Room 3</field><field name="sequence">30</field></record>
+  <record id="room_4" model="treatment.room"><field name="name">Room 4</field><field name="sequence">40</field></record>
+  <record id="service_abhyangam" model="treatment.service"><field name="name">Abhyangam</field><field name="duration_minutes">75</field><field name="cleaning_minutes">10</field></record>
+  <record id="service_abhy_elakizhi" model="treatment.service"><field name="name">Abhyangam + Elakizhi</field><field name="duration_minutes">90</field><field name="cleaning_minutes">10</field></record>
+</odoo>

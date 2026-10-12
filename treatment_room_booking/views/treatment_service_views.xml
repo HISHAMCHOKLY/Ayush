@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_treatment_service_list" model="ir.ui.view"><field name="name">treatment.service.list</field><field name="model">treatment.service</field><field name="arch" type="xml"><list><field name="name"/><field name="duration_minutes"/><field name="cleaning_minutes"/><field name="price"/><field name="currency_id"/><field name="active"/></list></field></record>
+  <record id="view_treatment_service_form" model="ir.ui.view"><field name="name">treatment.service.form</field><field name="model">treatment.service</field><field name="arch" type="xml"><form><sheet><group><field name="name"/><field name="active"/><field name="duration_minutes"/><field name="cleaning_minutes"/><field name="price"/><field name="currency_id"/><field name="description"/></group><notebook><page string="Required Stock Products"><field name="consumable_line_ids"><list editable="bottom"><field name="sequence" widget="handle"/><field name="product_id"/><field name="quantity"/><field name="product_uom_id" readonly="1"/></list></field></page></notebook></sheet></form></field></record>
+  <record id="action_treatment_services" model="ir.actions.act_window"><field name="name">Treatments / Services</field><field name="res_model">treatment.service</field><field name="view_mode">list,form</field></record>
+</odoo>

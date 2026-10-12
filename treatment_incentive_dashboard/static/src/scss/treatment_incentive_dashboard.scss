@@ -1,0 +1,283 @@
+.o_treatment_incentive_dashboard {
+    height: 100%;
+    overflow: auto;
+    padding: 24px 28px 30px;
+    background: #f6f7f9;
+    color: #243247;
+
+    .tid-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 0 0 5px;
+            letter-spacing: -0.4px;
+        }
+    }
+
+    .tid-subtitle {
+        color: #778397;
+        font-size: 13px;
+    }
+
+    .tid-actions {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .tid-kpis {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .tid-kpi-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 22px 24px;
+        min-height: 120px;
+        background: #fff;
+        border: 1px solid #e8ebf0;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(27, 43, 65, 0.04);
+    }
+
+    .tid-kpi-icon {
+        display: flex;
+        flex: 0 0 54px;
+        width: 54px;
+        height: 54px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        font-size: 21px;
+    }
+
+    .tid-icon-percentage {
+        color: #5b61ce;
+        background: #eeefff;
+    }
+
+    .tid-icon-target {
+        color: #14856e;
+        background: #e4f7f0;
+    }
+
+    .tid-kpi-copy {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+
+        .tid-kpi-label {
+            color: #778397;
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+
+        strong {
+            color: #202e43;
+            font-size: 28px;
+            line-height: 1.2;
+            font-weight: 750;
+        }
+
+        small {
+            color: #9aa3b1;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+    }
+
+    .tid-section-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 12px;
+        margin-bottom: 14px;
+
+        h2 {
+            font-size: 19px;
+            font-weight: 700;
+            margin: 0 0 4px;
+        }
+
+        p {
+            margin: 0;
+            color: #8993a3;
+            font-size: 12px;
+        }
+    }
+
+    .tid-employee-count {
+        color: #6e7b8e;
+        border: 1px solid #e2e7ed;
+        border-radius: 20px;
+        background: #fff;
+        font-size: 12px;
+        padding: 7px 11px;
+        white-space: nowrap;
+    }
+
+    .tid-table-wrap {
+        background: #fff;
+        border: 1px solid #e8ebf0;
+        border-radius: 12px;
+        overflow-x: auto;
+        box-shadow: 0 3px 12px rgba(27, 43, 65, 0.04);
+    }
+
+    .tid-table {
+        margin: 0;
+        min-width: 850px;
+
+        thead th {
+            background: #f9fafc;
+            color: #748095;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+            padding: 15px 18px;
+            border-bottom: 1px solid #e8ebf0;
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 14px 18px;
+            vertical-align: middle;
+            color: #344257;
+            font-size: 13px;
+            border-bottom-color: #f0f2f5;
+        }
+
+        tfoot th {
+            padding: 15px 18px;
+            background: #fafbfc;
+            border-top: 1px solid #e8ebf0;
+            font-size: 13px;
+        }
+    }
+
+    .tid-employee-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        color: #26364c;
+        font-weight: 600;
+        text-align: left;
+
+        &:hover {
+            color: #5b61ce;
+        }
+    }
+
+    .tid-avatar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        flex: 0 0 30px;
+        border-radius: 50%;
+        background: #eef1f7;
+        color: #738197;
+    }
+
+    .tid-count {
+        display: inline-flex;
+        min-width: 30px;
+        justify-content: center;
+        align-items: center;
+        padding: 4px 8px;
+        border-radius: 8px;
+        background: #f2f4f8;
+        color: #3b4960;
+        font-weight: 700;
+    }
+
+    .tid-incentive-value {
+        color: #16836e;
+        font-size: 14px;
+        font-weight: 750;
+        white-space: nowrap;
+    }
+
+    .tid-target-of {
+        display: block;
+        font-size: 10px;
+        color: #9aa3b1;
+        margin-top: 3px;
+    }
+
+    .tid-status {
+        display: inline-block;
+        border-radius: 20px;
+        padding: 5px 10px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .tid-status-achieved {
+        background: #e3f7ed;
+        color: #167650;
+    }
+
+    .tid-status-progress {
+        background: #fff4dc;
+        color: #94620b;
+    }
+
+    .tid-status-none {
+        background: #f0f2f5;
+        color: #8993a3;
+    }
+
+    .tid-empty {
+        text-align: center;
+        color: #919baa !important;
+        padding: 35px !important;
+    }
+
+    .tid-loading {
+        text-align: center;
+        color: #7b8798;
+        padding: 55px 20px;
+    }
+
+    .tid-footer-note {
+        color: #8d97a6;
+        font-size: 11px;
+        margin-top: 16px;
+    }
+}
+
+@media (max-width: 767px) {
+    .o_treatment_incentive_dashboard {
+        padding: 16px;
+
+        .tid-header,
+        .tid-section-heading {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .tid-kpis {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .tid-kpi-card {
+            padding: 18px;
+        }
+    }
+}

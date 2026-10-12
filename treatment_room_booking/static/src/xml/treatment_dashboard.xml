@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-name="treatment_room_booking.Dashboard">
+    <div class="o_treatment_room_dashboard">
+      <div class="trb-header">
+        <div>
+          <h1>Treatment Room Schedule</h1>
+          <div class="text-muted">Daily room availability · <t t-esc="workingHoursLabel"/></div>
+        </div>
+        <div class="trb-actions">
+          <button class="btn btn-primary" t-on-click="newBooking"><i class="fa fa-plus me-1"/> New Booking</button>
+          <button class="btn btn-secondary" t-on-click="loadData" title="Refresh"><i class="fa fa-refresh"/></button>
+        </div>
+      </div>
+      <div class="trb-toolbar">
+        <div class="btn-group" role="group">
+          <button class="btn btn-outline-secondary" t-on-click="previousDay" title="Previous day"><i class="fa fa-chevron-left"/></button>
+          <button class="btn btn-outline-secondary" t-on-click="today">Today</button>
+          <button class="btn btn-outline-secondary" t-on-click="nextDay" title="Next day"><i class="fa fa-chevron-right"/></button>
+        </div>
+        <input class="form-control trb-date" type="date" t-att-value="state.date" t-on-change="onDateChange"/>
+        <div class="trb-legend" aria-label="Booking status colors"><span class="trb-status-key trb-status-draft">Draft</span><span class="trb-status-key trb-status-confirmed">Confirmed</span><span class="trb-status-key trb-status-in_progress">In Progress</span><span class="trb-status-key trb-status-done">Done</span><span class="trb-status-key trb-status-paid">Paid</span><span class="trb-status-key trb-status-cancelled">Cancelled</span></div>
+        <span class="text-muted trb-updated" t-if="state.lastUpdated">Updated <t t-esc="state.lastUpdated"/> · auto-refresh 15 sec</span>
+      </div>
+      <div class="trb-summary">
+        <div class="trb-summary-card"><span>Rooms</span><strong t-esc="state.rooms.length"/></div>
+        <div class="trb-summary-card"><span>Today's Bookings</span><strong t-esc="state.todayCount"/></div>
+        <div class="trb-summary-card"><span>This Month's Bookings</span><strong t-esc="state.monthCount"/></div>
+      </div>
+      <div class="alert alert-warning mx-3" t-if="!state.loading and state.workingHours.is_closed"><i class="fa fa-calendar-times me-1"/>The treatment center is closed on <t t-esc="state.workingHours.weekday"/>. Configure Treatment Booking → Working Hours to change this.</div>
+      <div class="trb-loading" t-if="state.loading"><i class="fa fa-spinner fa-spin me-2"/>Loading schedule…</div>
+      <div class="trb-empty" t-elif="!state.rooms.length">
+        <i class="fa fa-bed"/><h3>No treatment rooms configured</h3><p>Create rooms from Treatment Booking → Rooms to start scheduling.</p>
+      </div>
+      <div class="trb-schedule-wrap" t-else="">
+        <div class="trb-schedule">
+          <div class="trb-time-head">
+            <div class="trb-room-label">ROOM</div>
+            <div class="trb-time-axis">
+              <t t-foreach="hours" t-as="hour" t-key="hour.label">
+                <div class="trb-hour-label" t-att-style="'left:' + hour.left + '%'" t-esc="hour.label"/>
+              </t>
+              <div class="trb-end-label" t-esc="closingTimeLabel"/>
+            </div>
+          </div>
+          <t t-foreach="state.rooms" t-as="room" t-key="room.id">
+            <div class="trb-room-row">
+              <div class="trb-room-label"><strong t-esc="room.name"/></div>
+              <div class="trb-timeline" t-on-click="(ev) => this.clickTimeline(ev, room)" t-att-aria-label="room.name + ' schedule'">
+                <t t-foreach="hours" t-as="hour" t-key="hour.label">
+                  <div class="trb-hour-line" t-att-style="'left:' + hour.left + '%'"/>
+                </t>
+                <t t-foreach="bookingsFor(room.id)" t-as="booking" t-key="booking.id">
+                  <button type="button" class="trb-booking" t-att-class="'trb-status-' + booking.dashboardStatus" t-att-style="'left:' + booking.left + '%;width:' + booking.width + '%'" t-on-click.stop="() => this.openBooking(booking)" t-att-title="booking.service + ' · ' + booking.customer + ' · ' + booking.mobile + ' · ' + booking.timeLabel + ' · ' + booking.dashboardStatus">
+                    <span class="trb-booking-service" t-esc="booking.service"/>
+                    <span class="trb-booking-customer" t-esc="booking.customer"/>
+                    <span class="trb-booking-mobile" t-esc="booking.mobile"/>
+                    <span class="trb-booking-time" t-esc="booking.timeLabel"/>
+                    <span class="trb-booking-status" t-esc="booking.dashboardStatus"/>
+                    <span class="trb-booking-therapist" t-if="booking.therapist_name" t-esc="booking.therapist_name"/>
+                  </button>
+                </t>
+              </div>
+            </div>
+          </t>
+        </div>
+      </div>
+      <div class="trb-footer-note"><i class="fa fa-info-circle me-1"/>Click an empty area in a room row to start a booking at that time. Click an existing booking to open it. Booking blocks are sized by treatment duration; cleaning time is reserved when checking conflicts.</div>
+    </div>
+  </t>
+</templates>

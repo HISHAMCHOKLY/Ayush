@@ -1,0 +1,24 @@
+<odoo>
+    <record id="res_config_settings_view_form_treatment_incentive" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.treatment.incentive</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app name="treatment_employee_incentive" string="Treatment Incentives" logo="/hr/static/description/icon.png">
+                    <block title="Therapist Incentive Rules">
+                        <setting string="Incentive Percentage" help="Percentage of the completed treatment value credited as incentive.">
+                            <field name="treatment_incentive_percentage"/>
+                        </setting>
+                        <setting string="Monthly Incentive Amount Target" help="Target for the employee's accumulated percentage-based incentive amount during the month, excluding bonus. Once reached, the next treatment starts a new incentive target cycle.">
+                            <field name="treatment_incentive_monthly_target"/>
+                        </setting>
+                        <setting string="Bonus for Achieving Target" help="Extra bonus added when the employee's accumulated percentage-based incentive reaches the monthly incentive target. Set to zero until the bonus amount is decided.">
+                            <field name="treatment_incentive_target_bonus_amount"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

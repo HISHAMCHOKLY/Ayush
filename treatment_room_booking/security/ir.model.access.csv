@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_treatment_room_user,treatment.room user,model_treatment_room,base.group_user,1,1,1,1
+access_treatment_service_user,treatment.service user,model_treatment_service,base.group_user,1,1,1,1
+access_treatment_booking_user,treatment.booking user,model_treatment_booking,base.group_user,1,1,1,1
+access_treatment_working_hours_user,treatment.working.hours user,model_treatment_working_hours,base.group_user,1,1,1,1
+
+access_treatment_service_consumable_user,treatment.service.consumable user,model_treatment_service_consumable,base.group_user,1,1,1,1
+access_treatment_booking_payment_user,treatment.booking.payment user,model_treatment_booking_payment,base.group_user,1,1,1,1

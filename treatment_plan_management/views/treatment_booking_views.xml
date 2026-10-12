@@ -1,0 +1,35 @@
+<odoo>
+    <record id="view_treatment_booking_form_plan_inherit" model="ir.ui.view">
+        <field name="name">treatment.booking.form.plan.inherit</field>
+        <field name="model">treatment.booking</field>
+        <field name="inherit_id" ref="treatment_room_booking.view_treatment_booking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='customer_id']" position="before">
+                <field name="booking_type" widget="radio" readonly="state != 'draft'"/>
+                <field name="plan_purchase_id" string="Patient Plan"
+                       invisible="booking_type != 'plan'"
+                       domain="[('state','=','active'), ('available_sessions','&gt;',0)]"
+                       readonly="state != 'draft'"/>
+            </xpath>
+            <xpath expr="//field[@name='customer_id']" position="attributes">
+                <attribute name="readonly">state != 'draft' or (booking_type == 'plan' and plan_purchase_id)</attribute>
+            </xpath>
+            <xpath expr="//field[@name='customer_id']" position="after">
+                <field name="patient_ids" widget="many2many_tags" string="Patients"
+                       invisible="booking_type != 'plan' or not plan_purchase_id or plan_pack_type == 'individual'"
+                       domain="[('id', 'in', eligible_member_ids), ('is_patient', '=', True)]"
+                       context="{'show_address': 1}"
+                       readonly="state != 'draft'"/>
+            </xpath>
+            <xpath expr="//field[@name='service_ids']" position="after">
+                <field name="plan_pack_type" string="Plan Type" readonly="1" invisible="booking_type != 'plan'"/><field name="plan_treatment_type" string="Hands Type" readonly="1" invisible="booking_type != 'plan'"/>
+                <field name="eligible_member_ids" invisible="1"/>
+                <field name="plan_member_id" invisible="1"/>
+                <field name="plan_covered" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_total']" position="attributes">
+                <attribute name="readonly">booking_type == 'plan' or state != 'draft'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

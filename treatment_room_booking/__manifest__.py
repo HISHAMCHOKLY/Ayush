@@ -1,0 +1,32 @@
+{
+    "name": "Treatment Room Booking Dashboard",
+    "version": "18.0.1.0.0",
+    "category": "Services/Appointment",
+    "summary": "Room-wise live treatment schedule with clickable available slots",
+    "description": "A horizontal time-axis dashboard for treatment rooms, services and daily bookings.",
+    "author": "Custom Development",
+    "license": "LGPL-3",
+    "depends": ["base", "web", "contacts", "hr", "stock", "product", "account"],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/sequence.xml",
+        "data/default_data.xml",
+        "data/working_hours_data.xml",
+        "views/treatment_room_views.xml",
+        "views/treatment_working_hours_views.xml",
+        "views/treatment_service_views.xml",
+        "views/treatment_booking_views.xml",
+        "views/dashboard_views.xml",
+        "views/patient_views.xml",
+        "report/treatment_booking_receipt.xml",
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "treatment_room_booking/static/src/js/treatment_dashboard.js",
+            "treatment_room_booking/static/src/xml/treatment_dashboard.xml",
+            "treatment_room_booking/static/src/scss/treatment_dashboard.scss",
+        ],
+    },
+    "application": True,
+    "installable": True,
+}

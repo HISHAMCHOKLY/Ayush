@@ -1,0 +1,59 @@
+<odoo>
+    <record id="view_treatment_plan_purchase_list" model="ir.ui.view">
+        <field name="name">treatment.plan.purchase.list</field><field name="model">treatment.plan.purchase</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'expired'" decoration-muted="state == 'cancelled'">
+                <field name="name"/><field name="customer_id" string="Patient"/><field name="plan_id"/><field name="purchase_date"/>
+                <field name="expiry_date"/><field name="plan_price"/><field name="amount_paid"/><field name="remaining_amount"/>
+                <field name="paid_sessions"/><field name="used_sessions"/><field name="available_sessions"/><field name="state"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_treatment_plan_purchase_form" model="ir.ui.view">
+        <field name="name">treatment.plan.purchase.form</field><field name="model">treatment.plan.purchase</field>
+        <field name="arch" type="xml">
+            <form string="Patient Plan">
+                <header>
+                    <button name="action_open_payment" type="object" string="Register Payment" class="btn-primary" invisible="state in ['expired','cancelled'] or remaining_amount &lt;= 0"/>
+                    <button name="action_activate" type="object" string="Activate Plan" invisible="state != 'draft'"/>
+                    <button name="action_refresh_expiry" type="object" string="Refresh Expiry"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,expired,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_report_treatment_plan_purchase)d" type="action" class="oe_stat_button" icon="fa-print" string="Print Plan PDF"/>
+                        <button name="action_view_bookings" type="object" class="oe_stat_button" icon="fa-calendar" invisible="booking_count == 0"><field name="booking_count" widget="statinfo" string="Bookings"/></button>
+                        <button name="action_view_payments" type="object" class="oe_stat_button" icon="fa-credit-card" invisible="payment_count == 0"><field name="payment_count" widget="statinfo" string="Payments"/></button>
+                    </div>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group><field name="plan_id" readonly="state != 'draft'"/><field name="plan_pack_type"/><field name="treatment_type"/><field name="preferred_therapist_ids" widget="many2many_tags" readonly="state != 'draft'"/><field name="customer_id" string="Patient" domain="[('is_patient', '=', True)]" readonly="state != 'draft'"/><field name="member_ids" string="Eligible Patients" widget="many2many_tags" domain="[('is_patient', '=', True)]" readonly="state != 'draft'"/><field name="purchase_date"/></group>
+                        <group><field name="start_date"/><field name="expiry_date" readonly="1"/><field name="validity_months" readonly="1"/><field name="currency_id" invisible="1"/><field name="plan_price" readonly="1"/><field name="amount_paid" readonly="1"/><field name="remaining_amount" readonly="1"/></group>
+                    </group>
+                    <group string="Service Entitlements">
+                        <field name="total_sessions" readonly="1"/><field name="per_session_price" readonly="1"/>
+                        <field name="paid_sessions" readonly="1"/><field name="used_sessions" readonly="1"/><field name="available_sessions" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Payments"><field name="payment_line_ids" readonly="1"><list><field name="date"/><field name="amount"/><field name="journal_id"/><field name="state"/><field name="account_payment_id"/></list></field></page>
+                        <page string="Bookings"><field name="booking_ids" readonly="1"><list><field name="name"/><field name="customer_id" string="Patient"/><field name="plan_member_id"/><field name="service_id"/><field name="start_datetime"/><field name="state"/></list></field></page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_treatment_plan_payment_form" model="ir.ui.view">
+        <field name="name">treatment.plan.payment.form</field><field name="model">treatment.plan.payment</field>
+        <field name="arch" type="xml">
+            <form string="Register Plan Payment">
+                <sheet><group><group><field name="purchase_id" readonly="1"/><field name="customer_id" string="Patient" readonly="1"/><field name="date"/><field name="journal_id" domain="[('type', 'in', ['cash', 'bank'])]"/></group>
+                <group><field name="currency_id" invisible="1"/><field name="amount"/><field name="state" readonly="1"/></group></group>
+                <footer><button name="action_register_payment" type="object" string="Register Payment" class="btn-primary" invisible="state != 'draft'"/><button string="Discard" special="cancel" class="btn-secondary"/></footer></sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_treatment_plan_purchases" model="ir.actions.act_window">
+        <field name="name">Patient Plans</field><field name="res_model">treatment.plan.purchase</field><field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_treatment_plan_purchases" name="Patient Plans" parent="treatment_plan_management.menu_treatment_plan_root" action="action_treatment_plan_purchases" sequence="20"/>
+</odoo>

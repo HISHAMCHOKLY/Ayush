@@ -1,0 +1,57 @@
+.o_treatment_room_dashboard {
+  padding: 22px 24px 28px;
+  color: #252b36;
+  background: #f7f8fa;
+  min-height: 100%;
+  .trb-header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px; h1 { font-size:25px; font-weight:650; margin:0 0 5px; } }
+  .trb-actions { display:flex; gap:8px; }
+  .trb-toolbar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:12px; background:white; border:1px solid #e3e7ed; border-radius:10px; margin-bottom:14px; }
+  .trb-date { width:165px; }
+  .trb-legend { display:flex; align-items:center; gap:5px; flex-wrap:wrap; font-size:11px; margin-left:auto; }
+  .trb-dot { display:inline-block; width:10px; height:10px; border-radius:3px; margin-left:8px; }
+  .trb-dot-booked { background:#f87171; } .trb-dot-confirmed { background:#34d399; } .trb-dot-free { background:#e7f5eb; border:1px solid #a5d6b2; }
+  .trb-updated { font-size:11px; }
+  .trb-summary { display:flex; gap:12px; margin-bottom:14px; }
+  .trb-summary-card { background:white; border:1px solid #e3e7ed; border-radius:9px; padding:12px 16px; min-width:140px; display:flex; flex-direction:column; gap:4px; span { font-size:12px; color:#687385; } strong { font-size:23px; } }
+  .trb-schedule-wrap { overflow-x:auto; background:white; border:1px solid #dfe4ea; border-radius:10px; }
+  .trb-schedule { min-width:950px; }
+  .trb-time-head, .trb-room-row { display:grid; grid-template-columns:110px minmax(0, 1fr); }
+  .trb-time-head { min-height:45px; background:#f0f3f7; border-bottom:1px solid #cfd6df; }
+  .trb-room-label { display:flex; align-items:center; padding:10px 12px; border-right:1px solid #dfe4ea; font-size:12px; color:#465266; background:#fafbfc; }
+  .trb-time-axis, .trb-timeline { position:relative; }
+  .trb-time-axis { min-height:45px; }
+  .trb-hour-label { position:absolute; top:14px; transform:translateX(-1px); font-size:11px; color:#566174; white-space:nowrap; }
+  .trb-end-label { position:absolute; right:0; top:14px; transform:translateX(-50%); font-size:11px; color:#566174; }
+  .trb-room-row { min-height:88px; border-bottom:1px solid #dfe4ea; }
+  .trb-room-row:last-child { border-bottom:0; }
+  .trb-room-label strong { font-size:13px; }
+  .trb-timeline { min-height:88px; cursor:crosshair; background:linear-gradient(to bottom, #fff 0%, #fff 100%); }
+  .trb-hour-line { position:absolute; top:0; bottom:0; width:1px; background:#e4e8ed; pointer-events:none; }
+  .trb-booking { position:absolute; top:7px; bottom:7px; min-width:5px; border:1px solid transparent; border-radius:5px; padding:6px 8px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; overflow:hidden; text-align:left; z-index:2; cursor:pointer; }
+  .trb-booking:hover { filter:brightness(.97); box-shadow:0 2px 6px #00000018; z-index:4; }
+  .trb-booking-confirmed { background:#b8f3d5; border-color:#7bd8aa; color:#145c3d; }
+  .trb-booking-booked { background:#ffd6d6; border-color:#f3a3a3; color:#8b2626; }
+  .trb-booking-service { font-weight:700; font-size:11px; line-height:1.25; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; }
+  .trb-booking-customer, .trb-booking-time, .trb-booking-therapist { font-size:10px; line-height:1.25; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; }
+  .trb-empty, .trb-loading { text-align:center; padding:60px 20px; color:#697586; }
+  .trb-empty .fa { font-size:32px; margin-bottom:12px; }
+  .trb-empty h3 { font-size:18px; }
+  .trb-footer-note { font-size:12px; color:#687385; margin-top:12px; }
+  @media (max-width: 768px) { padding:12px; .trb-header { align-items:flex-start; flex-direction:column; } .trb-summary { flex-wrap:wrap; } .trb-legend { margin-left:0; } }
+}
+
+.trb-booking.trb-status-draft { background:#E9D5FF !important; border-color:#9333EA !important; color:#581C87 !important; }
+.trb-booking.trb-status-confirmed { background:#BFDBFE !important; border-color:#2563EB !important; color:#1E3A8A !important; }
+.trb-booking.trb-status-in_progress { background:#FED7AA !important; border-color:#EA580C !important; color:#7C2D12 !important; }
+.trb-booking.trb-status-done { background:#BBF7D0 !important; border-color:#16A34A !important; color:#14532D !important; }
+.trb-booking.trb-status-paid { background:#D1FAE5 !important; border-color:#059669 !important; color:#064E3B !important; }
+.trb-booking.trb-status-cancelled { background:#E5E7EB !important; border-color:#6B7280 !important; color:#1F2937 !important; }
+.trb-booking-mobile, .trb-booking-status { display:block; font-size:10px; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+.trb-status-key { display:inline-flex; align-items:center; gap:4px; padding:3px 6px; border-radius:4px; border:1px solid transparent; font-size:11px; line-height:1.2; white-space:nowrap; }
+.trb-status-key.trb-status-draft { background:#E9D5FF; border-color:#9333EA; color:#581C87; }
+.trb-status-key.trb-status-confirmed { background:#BFDBFE; border-color:#2563EB; color:#1E3A8A; }
+.trb-status-key.trb-status-in_progress { background:#FED7AA; border-color:#EA580C; color:#7C2D12; }
+.trb-status-key.trb-status-done { background:#BBF7D0; border-color:#16A34A; color:#14532D; }
+.trb-status-key.trb-status-paid { background:#D1FAE5; border-color:#059669; color:#064E3B; }
+.trb-status-key.trb-status-cancelled { background:#E5E7EB; border-color:#6B7280; color:#1F2937; }

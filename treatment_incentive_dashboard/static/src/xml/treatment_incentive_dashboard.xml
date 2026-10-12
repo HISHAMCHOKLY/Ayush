@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="treatment_incentive_dashboard.Dashboard">
+        <div class="o_treatment_incentive_dashboard">
+            <div class="tid-header">
+                <div>
+                    <h1>Employee Incentive Dashboard</h1>
+                    <div class="tid-subtitle">
+                        <span t-esc="state.monthLabel"/>
+                        <t t-if="state.companyName"> · <span t-esc="state.companyName"/></t>
+                    </div>
+                </div>
+                <div class="tid-actions">
+                    <span class="text-muted tid-updated" t-if="state.lastUpdated">
+                        Updated <t t-esc="state.lastUpdated"/>
+                    </span>
+                    <button class="btn btn-primary" t-on-click="loadData" t-att-disabled="state.loading">
+                        <i t-att-class="state.loading ? 'fa fa-spinner fa-spin me-1' : 'fa fa-refresh me-1'"/>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="tid-kpis">
+                <div class="tid-kpi-card">
+                    <div class="tid-kpi-icon tid-icon-percentage"><i class="fa fa-percent"/></div>
+                    <div class="tid-kpi-copy">
+                        <span class="tid-kpi-label">Incentive Percentage</span>
+                        <strong t-esc="formatPercentage(state.percentage)"/>
+                        <small>Current company configuration</small>
+                    </div>
+                </div>
+                <div class="tid-kpi-card">
+                    <div class="tid-kpi-icon tid-icon-target"><i class="fa fa-bullseye"/></div>
+                    <div class="tid-kpi-copy">
+                        <span class="tid-kpi-label">Monthly Incentive Target</span>
+                        <strong t-esc="formatMoney(state.targetAmount)"/>
+                        <small>Per employee target cycle</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tid-section-heading">
+                <div>
+                    <h2>Employee Incentives</h2>
+                    <p>Completed, qualifying treatments for the current month</p>
+                </div>
+                <span class="tid-employee-count"><i class="fa fa-users me-1"/><t t-esc="state.employeeCount"/> employees</span>
+            </div>
+
+            <div class="tid-loading" t-if="state.loading">
+                <i class="fa fa-spinner fa-spin me-2"/>Loading incentive data…
+            </div>
+
+            <div class="alert alert-danger" t-elif="state.error">
+                Incentive data could not be loaded. Please refresh or check the server logs.
+            </div>
+
+            <div class="tid-table-wrap" t-else="">
+                <table class="table table-hover tid-table">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th class="text-end">Total Treatments</th>
+                            <th class="text-end">Total Incentive</th>
+                            <th class="text-end">Incentive Toward Target</th>
+                            <th class="text-center">Target Status</th>
+                            <th class="text-center">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-if="!state.employees.length">
+                            <tr>
+                                <td colspan="6" class="tid-empty">
+                                    No active employees found for this company.
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-foreach="state.employees" t-as="employee" t-key="employee.id">
+                            <tr>
+                                <td>
+                                    <button class="tid-employee-link" t-on-click="() => this.openEmployee(employee)">
+                                        <span class="tid-avatar"><i class="fa fa-user"/></span>
+                                        <span t-esc="employee.name"/>
+                                    </button>
+                                </td>
+                                <td class="text-end"><span class="tid-count" t-esc="employee.treatment_count"/></td>
+                                <td class="text-end">
+                                    <strong class="tid-incentive-value" t-esc="formatMoney(employee.incentive_amount)"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="formatMoney(employee.cycle_paid_amount)"/>
+                                    <span class="tid-target-of">of <t t-esc="formatMoney(employee.target_amount)"/></span>
+                                </td>
+                                <td class="text-center">
+                                    <span t-if="employee.target_achieved" class="tid-status tid-status-achieved">
+                                        <i class="fa fa-check-circle me-1"/>Achieved
+                                    </span>
+                                    <span t-elif="employee.treatment_count" class="tid-status tid-status-progress">
+                                        In progress
+                                    </span>
+                                    <span t-else="" class="tid-status tid-status-none">No activity</span>
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-outline-secondary" t-on-click="() => this.openHistory(employee)" t-att-disabled="!employee.treatment_count">
+                                        View history
+                                    </button>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                    <tfoot t-if="state.employees.length">
+                        <tr>
+                            <th>Total</th>
+                            <th class="text-end" t-esc="state.employees.reduce((sum, employee) => sum + employee.treatment_count, 0)"/>
+                            <th class="text-end" t-esc="formatMoney(state.employees.reduce((sum, employee) => sum + employee.incentive_amount, 0))"/>
+                            <th colspan="3"/>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="tid-footer-note">
+                <i class="fa fa-info-circle me-1"/>
+                The target tracks percentage-based incentives earned by each therapist, not treatment revenue. Plan bookings use the paid plan value per included session. Only qualifying Done bookings appear.
+            </div>
+        </div>
+    </t>
+</templates>

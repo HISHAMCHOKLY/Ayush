@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_partner_form_patient_flag" model="ir.ui.view">
+    <field name="name">res.partner.form.patient.flag</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='mobile']" position="after">
+        <field name="is_patient"/>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_partner_tree_patient_flag" model="ir.ui.view">
+    <field name="name">res.partner.list.patient.flag</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_tree"/>
+    <field name="arch" type="xml">
+      <xpath expr="//list" position="inside">
+        <field name="is_patient" optional="show"/>
+      </xpath>
+    </field>
+  </record>
+  <record id="action_treatment_patients" model="ir.actions.act_window">
+    <field name="name">Patients</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">list,form</field>
+    <field name="context">{'default_is_patient': True}</field>
+  </record>
+  <menuitem id="menu_treatment_patients" name="Patients" parent="menu_treatment_root" action="action_treatment_patients" sequence="2"/>
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="action_report_treatment_plan_purchase" model="ir.actions.report">
+    <field name="name">Patient Plan Report</field>
+    <field name="model">treatment.plan.purchase</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">treatment_plan_management.report_treatment_plan_purchase</field>
+    <field name="report_file">treatment_plan_management.report_treatment_plan_purchase</field>
+    <field name="binding_model_id" ref="model_treatment_plan_purchase"/>
+    <field name="binding_type">report</field>
+    <field name="print_report_name">'Patient Plan - %s' % (object.name)</field>
+  </record>
+  <template id="report_treatment_plan_purchase">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="o">
+        <div class="page" style="font-family:Arial,sans-serif;color:#222;padding:18px;">
+          <table style="width:100%;border-collapse:collapse;border-bottom:2px solid #2d7467;margin-bottom:18px;">
+            <tr>
+              <td style="width:35%;vertical-align:top;padding:0 0 12px;border:0;text-align:left;"><img t-if="res_company.logo" t-att-src="image_data_uri(res_company.logo)" style="max-height:75px;max-width:150px;"/></td>
+              <td style="width:65%;vertical-align:top;padding:0 0 12px;border:0;text-align:right;"><h2 style="margin:0;color:#2d7467;" t-esc="res_company.name"/><div t-if="res_company.partner_id.contact_address" t-esc="res_company.partner_id.contact_address"/><div t-if="res_company.phone">Phone: <span t-esc="res_company.phone"/></div><div t-if="res_company.email" t-esc="res_company.email"/></td>
+            </tr>
+          </table>
+          <h2 style="text-align:center;color:#2d7467;">Patient Plan Report</h2>
+          <p><strong>Plan Reference:</strong> <span t-esc="o.name"/><span style="float:right;"><strong>Purchase Date:</strong> <span t-esc="o.purchase_date.strftime('%d-%m-%Y') if o.purchase_date else '-'"/></span></p>
+          <h3 style="color:#2d7467;">Patient and Plan Details</h3>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><td style="padding:7px;border:1px solid #ddd;width:25%;"><strong>Patient Name</strong></td><td style="padding:7px;border:1px solid #ddd;width:25%;" t-esc="o.customer_id.name or '-'"/><td style="padding:7px;border:1px solid #ddd;width:25%;"><strong>Mobile</strong></td><td style="padding:7px;border:1px solid #ddd;width:25%;" t-esc="o.customer_id.mobile or o.customer_id.phone or '-'"/></tr>
+            <tr><td style="padding:7px;border:1px solid #ddd;"><strong>Plan Name</strong></td><td style="padding:7px;border:1px solid #ddd;" t-esc="o.plan_id.name"/><td style="padding:7px;border:1px solid #ddd;"><strong>Plan Type</strong></td><td style="padding:7px;border:1px solid #ddd;" t-esc="dict(o.plan_pack_type and o.plan_id._fields['pack_type'].selection or []).get(o.plan_pack_type, '-')"/></tr>
+            <tr><td style="padding:7px;border:1px solid #ddd;"><strong>Hands Type</strong></td><td style="padding:7px;border:1px solid #ddd;" t-esc="dict(o.plan_id._fields['treatment_type'].selection).get(o.treatment_type, '-')"/><td style="padding:7px;border:1px solid #ddd;"><strong>Preferred Therapist(s)</strong></td><td style="padding:7px;border:1px solid #ddd;" t-esc="', '.join(o.preferred_therapist_ids.mapped('name')) or '-'"/></tr>
+            <tr><td style="padding:7px;border:1px solid #ddd;"><strong>Start Date</strong></td><td style="padding:7px;border:1px solid #ddd;" t-esc="o.start_date.strftime('%d-%m-%Y') if o.start_date else '-'"/><td style="padding:7px;border:1px solid #ddd;"><strong>Expiry Date</strong></td><td style="padding:7px;border:1px solid #ddd;" t-esc="o.expiry_date.strftime('%d-%m-%Y') if o.expiry_date else '-'"/></tr>
+            <tr><td style="padding:7px;border:1px solid #ddd;"><strong>Plan Status</strong></td><td style="padding:7px;border:1px solid #ddd;" t-esc="dict(o._fields['state'].selection).get(o.state, '-')"/><td style="padding:7px;border:1px solid #ddd;"><strong>Eligible Patients</strong></td><td style="padding:7px;border:1px solid #ddd;" t-esc="', '.join(o.member_ids.mapped('name')) or '-'"/></tr>
+          </table>
+          <h3 style="margin-top:20px;color:#2d7467;">Plan Price and Sessions</h3>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><td style="padding:8px;border:1px solid #ddd;">Plan Price</td><td style="padding:8px;border:1px solid #ddd;text-align:right;"><span t-field="o.plan_price" t-options="{'widget':'monetary','display_currency':o.currency_id}"/></td></tr>
+            <tr><td style="padding:8px;border:1px solid #ddd;">Amount Paid</td><td style="padding:8px;border:1px solid #ddd;text-align:right;"><span t-field="o.amount_paid" t-options="{'widget':'monetary','display_currency':o.currency_id}"/></td></tr>
+            <tr><td style="padding:8px;border:1px solid #ddd;">Remaining Amount</td><td style="padding:8px;border:1px solid #ddd;text-align:right;"><span t-field="o.remaining_amount" t-options="{'widget':'monetary','display_currency':o.currency_id}"/></td></tr>
+            <tr><td style="padding:8px;border:1px solid #ddd;">Total Sessions / Paid / Used / Available</td><td style="padding:8px;border:1px solid #ddd;text-align:right;" t-esc="'%s / %s / %s / %s' % (o.total_sessions, o.paid_sessions, o.used_sessions, o.available_sessions)"/></tr>
+          </table>
+          <h3 style="margin-top:22px;color:#2d7467;">Booking History</h3>
+          <table style="width:100%;border-collapse:collapse;font-size:10px;">
+            <thead><tr style="background:#edf4f2;"><th style="padding:6px;border:1px solid #ddd;text-align:left;">Booking No.</th><th style="padding:6px;border:1px solid #ddd;text-align:left;">Date / Time</th><th style="padding:6px;border:1px solid #ddd;text-align:left;">Service(s)</th><th style="padding:6px;border:1px solid #ddd;text-align:left;">Therapist(s)</th><th style="padding:6px;border:1px solid #ddd;text-align:left;">Status</th><th style="padding:6px;border:1px solid #ddd;text-align:right;">Amount</th></tr></thead>
+            <tbody><tr t-foreach="o.booking_ids" t-as="b"><td style="padding:6px;border:1px solid #ddd;" t-esc="b.name"/><td style="padding:6px;border:1px solid #ddd;" t-esc="b.start_datetime.strftime('%d-%m-%Y %H:%M') if b.start_datetime else '-'"/><td style="padding:6px;border:1px solid #ddd;" t-esc="b.service_names or b.service_id.name or '-'"/><td style="padding:6px;border:1px solid #ddd;" t-esc="b.therapist_name or '-'"/><td style="padding:6px;border:1px solid #ddd;" t-esc="dict(b._fields['state'].selection).get(b.state, '-')"/><td style="padding:6px;border:1px solid #ddd;text-align:right;"><span t-field="b.amount_total" t-options="{'widget':'monetary','display_currency':b.currency_id}"/></td></tr><tr t-if="not o.booking_ids"><td colspan="6" style="padding:8px;border:1px solid #ddd;text-align:center;color:#777;">No bookings recorded for this plan.</td></tr></tbody>
+          </table>
+          <p style="margin-top:24px;text-align:center;color:#666;">Please retain this report for your records.</p>
+        </div>
+      </t>
+    </t>
+  </template>
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_treatment_booking" model="ir.sequence">
+        <field name="name">Treatment Booking</field>
+        <field name="code">treatment.booking</field>
+        <field name="prefix">TB/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
+</odoo>

@@ -1,0 +1,21 @@
+{
+    "name": "Treatment Plan Management",
+    "version": "18.0.1.0.0",
+    "category": "Services/Appointment",
+    "summary": "Configurable treatment packages, member access, validity and prepaid service entitlements",
+    "description": "Adds treatment plans on top of Treatment Room Booking, including family/couple packs, service entitlements, partial payments and therapist requirements.",
+    "author": "Custom Development",
+    "license": "LGPL-3",
+    "depends": ["treatment_room_booking", "account", "hr", "contacts"],
+    "data": [
+        "data/sequence.xml",
+        "data/ir_cron.xml",
+        "security/ir.model.access.csv",
+        "views/treatment_plan_views.xml",
+        "views/treatment_booking_views.xml",
+        "report/treatment_plan_purchase_report.xml",
+        "views/treatment_plan_purchase_views.xml",
+    ],
+    "application": True,
+    "installable": True,
+}

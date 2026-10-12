@@ -1,0 +1,12 @@
+<odoo>
+    <record id="action_treatment_incentive_dashboard" model="ir.actions.client">
+        <field name="name">Incentive Dashboard</field>
+        <field name="tag">treatment_incentive_dashboard.client_action</field>
+    </record>
+
+    <menuitem id="menu_treatment_incentive_dashboard"
+              name="Incentive Dashboard"
+              parent="treatment_employee_incentive.menu_treatment_incentive_root"
+              action="action_treatment_incentive_dashboard"
+              sequence="1"/>
+</odoo>

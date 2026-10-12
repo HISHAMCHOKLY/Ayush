@@ -1,0 +1,35 @@
+<odoo>
+    <record id="view_employee_form_treatment_incentive_history" model="ir.ui.view">
+        <field name="name">hr.employee.form.treatment.incentive.history</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Treatment History">
+                    <group>
+                        <field name="treatment_incentive_history_count" readonly="1"/>
+                    </group>
+                    <field name="treatment_incentive_history_ids" readonly="1" nolabel="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="treatment_date"/>
+                            <field name="booking_id"/>
+                            <field name="customer_id"/>
+                            <field name="service_id"/>
+                            <field name="booking_type"/>
+                            <field name="paid_amount_basis"/>
+                            <field name="therapist_count"/>
+                            <field name="treatment_amount" sum="Paid Amount per Therapist"/>
+                            <field name="incentive_percentage"/>
+                            <field name="incentive_amount" sum="Total Incentive"/>
+                            <field name="period_key"/>
+                            <field name="target_cycle"/>
+                            <field name="cycle_paid_amount"/>
+                            <field name="target_progress"/>
+                            <field name="target_achieved"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+    <record id="seq_treatment_plan_purchase" model="ir.sequence">
+        <field name="name">Customer Treatment Plan</field>
+        <field name="code">treatment.plan.purchase</field>
+        <field name="prefix">PLAN</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <record id="working_hours_0" model="treatment.working.hours"><field name="weekday">0</field><field name="start_hour">7.0</field><field name="end_hour">19.0</field><field name="is_closed">false</field></record>
+  <record id="working_hours_1" model="treatment.working.hours"><field name="weekday">1</field><field name="start_hour">7.0</field><field name="end_hour">19.0</field><field name="is_closed">false</field></record>
+  <record id="working_hours_2" model="treatment.working.hours"><field name="weekday">2</field><field name="start_hour">7.0</field><field name="end_hour">19.0</field><field name="is_closed">false</field></record>
+  <record id="working_hours_3" model="treatment.working.hours"><field name="weekday">3</field><field name="start_hour">7.0</field><field name="end_hour">19.0</field><field name="is_closed">false</field></record>
+  <record id="working_hours_4" model="treatment.working.hours"><field name="weekday">4</field><field name="start_hour">7.0</field><field name="end_hour">19.0</field><field name="is_closed">false</field></record>
+  <record id="working_hours_5" model="treatment.working.hours"><field name="weekday">5</field><field name="start_hour">7.0</field><field name="end_hour">19.0</field><field name="is_closed">false</field></record>
+  <record id="working_hours_6" model="treatment.working.hours"><field name="weekday">6</field><field name="start_hour">7.0</field><field name="end_hour">19.0</field><field name="is_closed">true</field></record>
+</odoo>

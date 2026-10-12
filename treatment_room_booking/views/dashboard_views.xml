@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="action_treatment_dashboard" model="ir.actions.client"><field name="name">Treatment Room Dashboard</field><field name="tag">treatment_room_booking.dashboard</field></record>
+  <menuitem id="menu_treatment_root" name="Treatment Booking" sequence="30" groups="base.group_user"/>
+  <menuitem id="menu_treatment_dashboard" name="Room Dashboard" parent="menu_treatment_root" action="action_treatment_dashboard" sequence="1"/>
+  <menuitem id="menu_treatment_bookings" name="Bookings" parent="menu_treatment_root" action="action_treatment_bookings" sequence="2"/>
+  <menuitem id="menu_treatment_services" name="Treatments / Services" parent="menu_treatment_root" action="action_treatment_services" sequence="3"/>
+  <menuitem id="menu_treatment_working_hours" name="Working Hours" parent="menu_treatment_root" action="action_treatment_working_hours" sequence="5"/>
+  <menuitem id="menu_treatment_rooms" name="Rooms" parent="menu_treatment_root" action="action_treatment_rooms" sequence="4"/>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="action_report_treatment_booking_receipt" model="ir.actions.report">
+    <field name="name">Treatment Payment Receipt</field>
+    <field name="model">treatment.booking</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">treatment_room_booking.report_treatment_booking_receipt</field>
+    <field name="report_file">treatment_room_booking.report_treatment_booking_receipt</field>
+    <field name="binding_model_id" ref="model_treatment_booking"/>
+    <field name="binding_type">report</field>
+    <field name="print_report_name">'Treatment Receipt - %s' % (object.name)</field>
+  </record>
+  <template id="report_treatment_booking_receipt">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="o">
+        <div class="page" style="font-family:Arial,sans-serif;color:#222;padding:18px;">
+          <table style="width:100%;border-collapse:collapse;border-bottom:2px solid #2d7467;padding-bottom:12px;margin-bottom:18px;">
+            <tr>
+              <td style="width:35%;vertical-align:top;padding:0 0 12px 0;border:0;text-align:left;"><img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height:75px;max-width:150px;"/></td>
+              <td style="width:65%;vertical-align:top;padding:0 0 12px 0;border:0;text-align:right;"><h2 style="margin:0;color:#2d7467;" t-esc="o.company_id.name"/><div t-if="o.company_id.partner_id.contact_address" t-esc="o.company_id.partner_id.contact_address"/><div t-if="o.company_id.phone">Phone: <span t-esc="o.company_id.phone"/></div><div t-if="o.company_id.email" t-esc="o.company_id.email"/></td>
+            </tr>
+          </table>
+          <h2 style="text-align:center;">Treatment Payment Receipt</h2>
+          <p><strong>Receipt / Booking No.:</strong> <span t-esc="o.name"/> <span style="float:right;"><strong>Date:</strong> <span t-esc="o.start_datetime.strftime('%d-%m-%Y') if o.start_datetime else ''"/></span></p>
+          <table style="width:100%;border-collapse:collapse;margin-top:12px;">
+            <tr><td style="padding:8px;border:1px solid #ddd;width:25%;"><strong>Patient Name</strong></td><td style="padding:8px;border:1px solid #ddd;" t-esc="o.customer_id.name"/><td style="padding:8px;border:1px solid #ddd;width:25%;"><strong>Mobile Number</strong></td><td style="padding:8px;border:1px solid #ddd;" t-esc="o.contact_number or o.mobile_number or '-'"/></tr>
+            <tr><td style="padding:8px;border:1px solid #ddd;"><strong>Therapist Name</strong></td><td colspan="3" style="padding:8px;border:1px solid #ddd;" t-esc="o.therapist_name or '-'"/></tr>
+            <tr><td style="padding:8px;border:1px solid #ddd;"><strong>Service(s)</strong></td><td colspan="3" style="padding:8px;border:1px solid #ddd;" t-esc="o.service_names or o.service_id.name or '-'"/></tr>
+          </table>
+          <h3 style="margin-top:24px;color:#2d7467;">Price Details</h3>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr><td style="padding:9px;border:1px solid #ddd;">Total Amount</td><td style="padding:9px;border:1px solid #ddd;text-align:right;"><span t-field="o.amount_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+            <tr><td style="padding:9px;border:1px solid #ddd;">Discount %</td><td style="padding:9px;border:1px solid #ddd;text-align:right;"><span t-esc="'%.2f' % o.discount_percent"/>%</td></tr>
+            <tr><td style="padding:9px;border:1px solid #ddd;">Discounted Price</td><td style="padding:9px;border:1px solid #ddd;text-align:right;"><span t-field="o.discounted_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+            <tr><td style="padding:9px;border:1px solid #ddd;">Paid Amount</td><td style="padding:9px;border:1px solid #ddd;text-align:right;"><span t-field="o.paid_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+            <tr><td style="padding:9px;border:1px solid #ddd;"><strong>Balance</strong></td><td style="padding:9px;border:1px solid #ddd;text-align:right;"><strong><span t-field="o.balance_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></strong></td></tr>
+          </table>
+          <p style="margin-top:30px;text-align:center;color:#666;">Thank you for choosing us.</p>
+        </div>
+      </t>
+    </t>
+  </template>
+</odoo>
