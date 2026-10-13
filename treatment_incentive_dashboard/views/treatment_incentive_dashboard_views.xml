@@ -8,5 +8,7 @@
               name="Incentive Dashboard"
               parent="treatment_employee_incentive.menu_treatment_incentive_root"
               action="action_treatment_incentive_dashboard"
-              sequence="1"/>
+              sequence="1"
+              groups="base.group_user"/>
+
 </odoo>

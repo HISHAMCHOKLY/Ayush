@@ -20,6 +20,12 @@
     <record id="action_treatment_plans" model="ir.actions.act_window">
         <field name="name">Treatment Plans</field><field name="res_model">treatment.plan</field><field name="view_mode">list,form</field>
     </record>
-    <menuitem id="menu_treatment_plan_root" name="Treatment Plans" parent="treatment_room_booking.menu_treatment_root" sequence="30" />
-    <menuitem id="menu_treatment_plans" name="Plan Configuration" parent="menu_treatment_plan_root" action="action_treatment_plans" sequence="10"/>
+    <!-- Treatment Plans config goes under Configuration sub-menu -->
+    <menuitem id="menu_treatment_plans"
+              name="Treatment Plans"
+              parent="treatment_room_booking.menu_treatment_configuration"
+              action="action_treatment_plans"
+              sequence="4"
+              groups="base.group_system"/>
+
 </odoo>

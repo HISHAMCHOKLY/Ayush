@@ -55,5 +55,11 @@
     <record id="action_treatment_plan_purchases" model="ir.actions.act_window">
         <field name="name">Patient Plans</field><field name="res_model">treatment.plan.purchase</field><field name="view_mode">list,form</field>
     </record>
-    <menuitem id="menu_treatment_plan_purchases" name="Patient Plans" parent="treatment_plan_management.menu_treatment_plan_root" action="action_treatment_plan_purchases" sequence="20"/>
+    <menuitem id="menu_treatment_plan_purchases"
+              name="Patient Plans"
+              parent="treatment_room_booking.menu_treatment_root"
+              action="action_treatment_plan_purchases"
+              sequence="4"
+              groups="base.group_user"/>
+
 </odoo>

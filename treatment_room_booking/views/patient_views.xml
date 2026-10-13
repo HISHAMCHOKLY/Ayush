@@ -24,7 +24,14 @@
     <field name="name">Patients</field>
     <field name="res_model">res.partner</field>
     <field name="view_mode">list,form</field>
+    <field name="domain">[('is_patient', '=', True)]</field>
     <field name="context">{'default_is_patient': True}</field>
   </record>
-  <menuitem id="menu_treatment_patients" name="Patients" parent="menu_treatment_root" action="action_treatment_patients" sequence="2"/>
+  <menuitem id="menu_treatment_patients"
+            name="Patients"
+            parent="treatment_room_booking.menu_treatment_root"
+            action="action_treatment_patients"
+            sequence="3"
+            groups="base.group_user"/>
+
 </odoo>

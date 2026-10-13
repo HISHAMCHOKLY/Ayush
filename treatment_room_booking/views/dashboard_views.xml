@@ -1,10 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <record id="action_treatment_dashboard" model="ir.actions.client"><field name="name">Treatment Room Dashboard</field><field name="tag">treatment_room_booking.dashboard</field></record>
-  <menuitem id="menu_treatment_root" name="Treatment Booking" sequence="30" groups="base.group_user"/>
-  <menuitem id="menu_treatment_dashboard" name="Room Dashboard" parent="menu_treatment_root" action="action_treatment_dashboard" sequence="1"/>
-  <menuitem id="menu_treatment_bookings" name="Bookings" parent="menu_treatment_root" action="action_treatment_bookings" sequence="2"/>
-  <menuitem id="menu_treatment_services" name="Treatments / Services" parent="menu_treatment_root" action="action_treatment_services" sequence="3"/>
-  <menuitem id="menu_treatment_working_hours" name="Working Hours" parent="menu_treatment_root" action="action_treatment_working_hours" sequence="5"/>
-  <menuitem id="menu_treatment_rooms" name="Rooms" parent="menu_treatment_root" action="action_treatment_rooms" sequence="4"/>
+    <record id="action_treatment_dashboard" model="ir.actions.client">
+        <field name="name">Treatment Room Dashboard</field>
+        <field name="tag">treatment_room_booking.dashboard</field>
+    </record>
+
+    <!-- ======================== ROOT MENU ======================== -->
+    <menuitem id="menu_treatment_root"
+              name="Treatment"
+              sequence="30"
+              groups="base.group_user"
+              web_icon="treatment_room_booking,static/description/icon.png"/>
+
+    <!-- ====================== MAIN MENUS ======================== -->
+    <menuitem id="menu_treatment_dashboard"
+              name="Dashboard"
+              parent="menu_treatment_root"
+              action="action_treatment_dashboard"
+              sequence="1"
+              groups="base.group_user"/>
+
+    <menuitem id="menu_treatment_bookings"
+              name="Bookings"
+              parent="menu_treatment_root"
+              action="action_treatment_bookings"
+              sequence="2"
+              groups="base.group_user"/>
+
+    <!-- Patients menu is defined in patient_views.xml -->
+
+    <!-- =================== CONFIGURATION MENU =================== -->
+    <menuitem id="menu_treatment_configuration"
+              name="Configuration"
+              parent="menu_treatment_root"
+              sequence="100"
+              groups="base.group_system"/>
+
+    <menuitem id="menu_treatment_services"
+              name="Treatments / Services"
+              parent="menu_treatment_configuration"
+              action="action_treatment_services"
+              sequence="1"
+              groups="base.group_system"/>
+
+    <menuitem id="menu_treatment_rooms"
+              name="Rooms"
+              parent="menu_treatment_configuration"
+              action="action_treatment_rooms"
+              sequence="2"
+              groups="base.group_system"/>
+
+    <menuitem id="menu_treatment_working_hours"
+              name="Working Hours"
+              parent="menu_treatment_configuration"
+              action="action_treatment_working_hours"
+              sequence="3"
+              groups="base.group_system"/>
 </odoo>
+
