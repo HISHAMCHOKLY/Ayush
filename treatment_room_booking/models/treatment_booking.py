@@ -21,10 +21,10 @@ class TreatmentBooking(models.Model):
     service_ids = fields.Many2many("treatment.service", "treatment_booking_service_rel", "booking_id", "service_id", string="Services", domain=[("active", "=", True)])
     service_names = fields.Char(compute="_compute_service_names", string="Service Names", readonly=True)
     mobile_number = fields.Char(related="customer_id.mobile", string="Patient Mobile Number", readonly=True)
-    discount_percent = fields.Float(string="Discount %", compute="_compute_booking_financials", readonly=True)
-    discounted_price = fields.Monetary(string="Discounted Price", compute="_compute_booking_financials", currency_field="currency_id", readonly=True)
-    paid_amount = fields.Monetary(string="Paid Amount", compute="_compute_booking_financials", currency_field="currency_id", readonly=True)
-    therapist_ids = fields.Many2many("hr.employee", "treatment_booking_employee_rel", "booking_id", "employee_id", string="Therapists", domain=[("active", "=", True)])
+    discount_percent = fields.Float(string="Discount %", default=0.0)
+    discounted_price = fields.Monetary(string="Discounted Price", compute="_compute_booking_financials", currency_field="currency_id", readonly=True, store=True)
+    paid_amount = fields.Monetary(string="Paid Amount", compute="_compute_booking_financials", currency_field="currency_id", readonly=True, store=True)
+    therapist_ids = fields.Many2many("hr.employee", "treatment_booking_employee_rel", "booking_id", "employee_id", string="Therapists", domain=[("active", "=", True), ("is_therapist", "=", True)])
     # Keep the dashboard payload compatible while supporting multiple therapists.
     therapist_name = fields.Char(compute="_compute_therapist_name", string="Therapist Names", readonly=True)
     start_datetime = fields.Datetime(required=True, string="Start")
@@ -47,8 +47,18 @@ class TreatmentBooking(models.Model):
             rec.payment_count = len(rec.payment_ids.filtered(lambda p: p.state == "posted" and p.account_payment_id))
             rec.inventory_count = 1 if rec.stock_picking_id else 0
     amount_total = fields.Monetary(compute="_compute_amount_total", store=True, currency_field="currency_id")
-    currency_id = fields.Many2one(related="service_id.currency_id", store=True, readonly=True)
+    currency_id = fields.Many2one("res.currency", compute="_compute_currency_id", store=True, readonly=True)
     stock_picking_id = fields.Many2one("stock.picking", readonly=True, copy=False, string="Stock Consumption Transfer")
+
+    @api.depends("service_id", "service_ids", "service_id.currency_id", "service_ids.currency_id")
+    def _compute_currency_id(self):
+        for rec in self:
+            if rec.service_id and rec.service_id.currency_id:
+                rec.currency_id = rec.service_id.currency_id
+            elif rec.service_ids:
+                rec.currency_id = rec.service_ids[0].currency_id
+            else:
+                rec.currency_id = self.env.company.currency_id
 
     @api.depends("therapist_ids", "therapist_ids.name")
     def _compute_therapist_name(self):
@@ -67,14 +77,19 @@ class TreatmentBooking(models.Model):
             services = rec.service_ids or rec.service_id
             rec.service_names = ", ".join(services.mapped("name"))
 
-    @api.depends("amount_total", "payment_ids.state", "payment_ids.paid_amount", "payment_ids.discount_percent", "payment_ids.discounted_price")
+    @api.depends("amount_total", "discount_percent", "payment_ids.state", "payment_ids.paid_amount", "payment_ids.discounted_price")
     def _compute_booking_financials(self):
         for rec in self:
             posted = rec.payment_ids.filtered(lambda p: p.state == "posted")
             rec.paid_amount = sum(posted.mapped("paid_amount"))
             latest = posted[-1] if posted else False
-            rec.discount_percent = latest.discount_percent if latest else 0.0
-            rec.discounted_price = latest.discounted_price if latest else rec.amount_total
+            # If a payment has been posted use its discounted_price, otherwise
+            # derive it from the booking-level discount_percent.
+            if latest:
+                rec.discounted_price = latest.discounted_price
+            else:
+                discount = min(max(rec.discount_percent, 0.0), 100.0)
+                rec.discounted_price = rec.amount_total * (1.0 - discount / 100.0)
 
     @api.depends("payment_ids.state", "payment_ids.paid_amount", "payment_ids.discounted_price", "amount_total")
     def _compute_balance_amount(self):
@@ -250,7 +265,7 @@ class TreatmentBooking(models.Model):
         posted = self.payment_ids.filtered(lambda payment: payment.state == "posted")
         already_paid = sum(posted.mapped("paid_amount"))
         latest = posted[-1] if posted else False
-        target_amount = latest.discounted_price if latest else self.amount_total
+        target_amount = latest.discounted_price if latest else self.discounted_price
         balance = max(target_amount - already_paid, 0.0)
         if balance <= 0:
             raise UserError(_("This booking is already fully paid."))
@@ -258,7 +273,7 @@ class TreatmentBooking(models.Model):
                 "res_model": "treatment.booking.payment", "view_mode": "form",
                 "target": "new", "context": {
                     "default_booking_id": self.id,
-                    "default_discount_percent": latest.discount_percent if latest else 0.0,
+                    "default_discount_percent": latest.discount_percent if latest else self.discount_percent,
                     "default_paid_amount": balance,
                 }}
 

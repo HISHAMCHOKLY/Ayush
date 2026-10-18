@@ -1,6 +1,6 @@
 {
     "name": "Treatment Room Booking Dashboard",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.0.1",
     "category": "Services/Appointment",
     "summary": "Room-wise live treatment schedule with clickable available slots",
     "description": "A horizontal time-axis dashboard for treatment rooms, services and daily bookings.",
@@ -18,6 +18,7 @@
         "views/treatment_booking_views.xml",
         "views/dashboard_views.xml",
         "views/patient_views.xml",
+        "views/therapist_views.xml",
         "report/treatment_booking_receipt.xml",
     ],
     "assets": {

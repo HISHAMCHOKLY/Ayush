@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- ============ hr.employee: is_therapist flag ============ -->
+  <record id="view_employee_form_therapist_flag" model="ir.ui.view">
+    <field name="name">hr.employee.form.therapist.flag</field>
+    <field name="model">hr.employee</field>
+    <field name="inherit_id" ref="hr.view_employee_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='job_title']" position="after">
+        <field name="is_therapist" string="Is Therapist"/>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- Therapist list view (filtered to is_therapist employees) -->
+  <record id="view_employee_list_therapist" model="ir.ui.view">
+    <field name="name">hr.employee.list.therapist</field>
+    <field name="model">hr.employee</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="job_title"/>
+        <field name="department_id"/>
+        <field name="work_phone"/>
+        <field name="work_email"/>
+        <field name="is_therapist"/>
+      </list>
+    </field>
+  </record>
+
+  <!-- Action: Therapists -->
+  <record id="action_treatment_therapists" model="ir.actions.act_window">
+    <field name="name">Therapists</field>
+    <field name="res_model">hr.employee</field>
+    <field name="view_mode">list,form</field>
+    <field name="domain">[('is_therapist', '=', True)]</field>
+    <field name="context">{'default_is_therapist': True}</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+      (0, 0, {'view_mode': 'list', 'view_id': ref('view_employee_list_therapist')}),
+    ]"/>
+  </record>
+
+  <!-- Menu: Therapists under Treatment root -->
+  <menuitem id="menu_treatment_therapists"
+            name="Therapists"
+            parent="treatment_room_booking.menu_treatment_root"
+            action="action_treatment_therapists"
+            sequence="4"
+            groups="base.group_user"/>
+</odoo>

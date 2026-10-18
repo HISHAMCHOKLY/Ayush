@@ -1,6 +1,6 @@
 {
     "name": "Treatment Plan Management",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.0.1",
     "category": "Services/Appointment",
     "summary": "Configurable treatment packages, member access, validity and prepaid service entitlements",
     "description": "Adds treatment plans on top of Treatment Room Booking, including family/couple packs, service entitlements, partial payments and therapist requirements.",
