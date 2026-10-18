@@ -1,12 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <record id="view_treatment_working_hours_list" model="ir.ui.view">
-    <field name="name">treatment.working.hours.list</field><field name="model">treatment.working.hours</field>
-    <field name="arch" type="xml"><list editable="bottom"><field name="weekday"/><field name="is_closed"/><field name="start_hour" widget="float_time" invisible="is_closed"/><field name="end_hour" widget="float_time" invisible="is_closed"/></list></field>
-  </record>
-  <record id="view_treatment_working_hours_form" model="ir.ui.view">
-    <field name="name">treatment.working.hours.form</field><field name="model">treatment.working.hours</field>
-    <field name="arch" type="xml"><form><sheet><group><field name="weekday"/><field name="is_closed"/><field name="start_hour" widget="float_time" invisible="is_closed"/><field name="end_hour" widget="float_time" invisible="is_closed"/></group></sheet></form></field>
-  </record>
-  <record id="action_treatment_working_hours" model="ir.actions.act_window"><field name="name">Day-wise Working Hours</field><field name="res_model">treatment.working.hours</field><field name="view_mode">list,form</field></record>
+
+    <!-- ================================================================
+         WORKING HOURS — LIST VIEW
+    ================================================================ -->
+    <record id="view_treatment_working_hours_list" model="ir.ui.view">
+        <field name="name">treatment.working.hours.list</field>
+        <field name="model">treatment.working.hours</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" string="Working Hours">
+                <field name="weekday" string="Day"/>
+                <field name="is_closed" string="Closed"/>
+                <field name="start_hour"
+                       widget="float_time"
+                       string="Opening Time"
+                       invisible="is_closed"/>
+                <field name="end_hour"
+                       widget="float_time"
+                       string="Closing Time"
+                       invisible="is_closed"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         WORKING HOURS — FORM VIEW
+    ================================================================ -->
+    <record id="view_treatment_working_hours_form" model="ir.ui.view">
+        <field name="name">treatment.working.hours.form</field>
+        <field name="model">treatment.working.hours</field>
+        <field name="arch" type="xml">
+            <form string="Working Hours">
+                <sheet>
+                    <group string="Day Configuration">
+                        <group string="Day">
+                            <field name="weekday" string="Day of Week"/>
+                            <field name="is_closed" string="Center Closed"/>
+                        </group>
+                        <group string="Hours" invisible="is_closed">
+                            <field name="start_hour"
+                                   widget="float_time"
+                                   string="Opening Time"
+                                   invisible="is_closed"/>
+                            <field name="end_hour"
+                                   widget="float_time"
+                                   string="Closing Time"
+                                   invisible="is_closed"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         ACTION
+    ================================================================ -->
+    <record id="action_treatment_working_hours" model="ir.actions.act_window">
+        <field name="name">Day-wise Working Hours</field>
+        <field name="res_model">treatment.working.hours</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No working hours configured yet!
+            </p>
+            <p>Set the opening and closing times for each day of the week.</p>
+        </field>
+    </record>
+
 </odoo>

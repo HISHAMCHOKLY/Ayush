@@ -1,19 +1,312 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <record id="view_treatment_booking_list" model="ir.ui.view"><field name="name">treatment.booking.list</field><field name="model">treatment.booking</field><field name="arch" type="xml"><list decoration-muted="state == 'cancelled'"><field name="name"/><field name="start_datetime"/><field name="end_datetime"/><field name="room_id"/><field name="customer_id" string="Patient"/><field name="service_id"/><field name="therapist_ids" widget="many2many_tags" domain="[('is_therapist', '=', True)]"/><field name="payment_status"/><field name="state"/></list></field></record>
-  <record id="view_treatment_booking_form" model="ir.ui.view"><field name="name">treatment.booking.form</field><field name="model">treatment.booking</field><field name="arch" type="xml"><form><header>
-    <button name="action_confirm" type="object" string="Confirm" class="btn-primary" invisible="state != 'draft'"/>
-    <button name="action_cancel" type="object" string="Cancel" invisible="state != 'draft'"/>
-    <button name="action_open_payment" type="object" string="Receipt Payment" class="btn-primary" invisible="state not in ['confirmed', 'done'] or payment_status == 'paid'"/>
-    <button name="action_start" type="object" string="Start Treatment" invisible="state != 'confirmed'"/>
-    <button name="action_mark_done" type="object" string="Mark as Done" class="btn-primary" invisible="state not in ['confirmed', 'in_progress']"/>
-    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,in_progress,done,cancelled"/>
-  </header><sheet>
-    <div class="oe_button_box" name="button_box">
-      <button name="action_print_receipt" type="object" class="oe_stat_button" icon="fa-print" string="Print Receipt" invisible="payment_status != 'paid'"/><button name="action_view_payments" type="object" class="oe_stat_button" icon="fa-credit-card" invisible="payment_count == 0"><field name="payment_count" widget="statinfo" string="Payments"/></button>
-      <button name="action_view_inventory" type="object" class="oe_stat_button" icon="fa-truck" invisible="inventory_count == 0"><field name="inventory_count" widget="statinfo" string="Inventory"/></button>
-    </div>
-    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div><group><group><field name="customer_id" string="Patient" domain="[('is_patient', '=', True)]" context="{'default_is_patient': True}" readonly="state != 'draft'"/><field name="contact_number"/><field name="room_id" readonly="state != 'draft'"/><field name="service_ids" widget="many2many_tags" readonly="state != 'draft'"/></group><group><field name="therapist_ids" widget="many2many_tags" domain="[('is_therapist', '=', True)]" context="{'default_is_therapist': True}" readonly="state != 'draft'"/><field name="start_datetime" readonly="state != 'draft'"/><field name="end_datetime"/><field name="cleaning_minutes"/><field name="amount_total" readonly="1"/><field name="discount_percent" readonly="state in ['done', 'cancelled'] or payment_status != 'unpaid'"/><field name="discounted_price" readonly="1"/><field name="paid_amount" readonly="1"/><field name="balance_amount" readonly="1"/><field name="payment_status" readonly="1"/></group></group><group><field name="notes"/></group></sheet></form></field></record>
-  <record id="view_treatment_booking_payment_form" model="ir.ui.view"><field name="name">treatment.booking.payment.form</field><field name="model">treatment.booking.payment</field><field name="arch" type="xml"><form string="Receipt Payment"><sheet><group><group><field name="booking_id" invisible="1"/><field name="customer_id" string="Patient" readonly="1"/><field name="mobile_number" readonly="1"/><field name="date" readonly="1"/><field name="journal_id" domain="[('type', 'in', ['cash', 'bank'])]"/></group><group><field name="total_amount" readonly="1"/><field name="discount_percent"/><field name="discounted_price" readonly="1"/><field name="paid_amount"/><field name="remaining_amount" readonly="1"/><field name="payment_action" widget="radio"/></group></group><footer><button string="Register Payment" type="object" name="action_register_payment" class="btn-primary"/><button string="Discard" special="cancel" class="btn-secondary"/></footer></sheet></form></field></record>
-  <record id="action_treatment_bookings" model="ir.actions.act_window"><field name="name">Treatment Bookings</field><field name="res_model">treatment.booking</field><field name="view_mode">list,form</field></record>
+
+    <!-- ================================================================
+         TREATMENT BOOKING — LIST VIEW
+    ================================================================ -->
+    <record id="view_treatment_booking_list" model="ir.ui.view">
+        <field name="name">treatment.booking.list</field>
+        <field name="model">treatment.booking</field>
+        <field name="arch" type="xml">
+            <list
+                string="Treatment Bookings"
+                decoration-muted="state == 'cancelled'"
+                decoration-success="state == 'done'"
+                decoration-info="state == 'confirmed'"
+                decoration-warning="state == 'in_progress'"
+                default_order="start_datetime desc">
+                <field name="name" string="Booking Ref." optional="show"/>
+                <field name="customer_id" string="Patient" optional="show"/>
+                <field name="contact_number" string="Contact" optional="show"/>
+                <field name="room_id" string="Room" optional="show"/>
+                <field name="service_names" string="Services" optional="show"/>
+                <field name="therapist_ids" widget="many2many_tags"
+                       domain="[('is_therapist', '=', True)]"
+                       string="Therapists" optional="show"/>
+                <field name="start_datetime" string="Start" optional="show"/>
+                <field name="end_datetime" string="End" optional="show"/>
+                <field name="amount_total" string="Total" sum="Grand Total" optional="show"/>
+                <field name="payment_status"
+                       decoration-success="payment_status == 'paid'"
+                       decoration-warning="payment_status == 'partial'"
+                       decoration-muted="payment_status == 'unpaid'"
+                       optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-info="state == 'confirmed'"
+                       decoration-warning="state == 'in_progress'"
+                       decoration-muted="state == 'cancelled'"
+                       optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         TREATMENT BOOKING — FORM VIEW
+    ================================================================ -->
+    <record id="view_treatment_booking_form" model="ir.ui.view">
+        <field name="name">treatment.booking.form</field>
+        <field name="model">treatment.booking</field>
+        <field name="arch" type="xml">
+            <form string="Treatment Booking">
+                <header>
+                    <button name="action_confirm"
+                            type="object"
+                            string="Confirm"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_start"
+                            type="object"
+                            string="Start Treatment"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_mark_done"
+                            type="object"
+                            string="Mark as Done"
+                            class="btn-primary"
+                            invisible="state not in ('confirmed', 'in_progress')"/>
+                    <button name="action_open_payment"
+                            type="object"
+                            string="Register Payment"
+                            class="btn-primary"
+                            invisible="state not in ('confirmed', 'done') or payment_status == 'paid'"/>
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            invisible="state not in ('draft', 'confirmed')"/>
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,confirmed,in_progress,done"/>
+                </header>
+
+                <sheet>
+                    <!-- Smart Buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_print_receipt"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-print"
+                                string="Print Receipt"
+                                invisible="payment_status != 'paid'"/>
+                        <button name="action_view_payments"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-credit-card"
+                                invisible="payment_count == 0">
+                            <field name="payment_count" widget="statinfo" string="Payments"/>
+                        </button>
+                        <button name="action_view_inventory"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-truck"
+                                invisible="inventory_count == 0">
+                            <field name="inventory_count" widget="statinfo" string="Stock Used"/>
+                        </button>
+                    </div>
+
+                    <!-- Title Row -->
+                    <div class="oe_title">
+                        <label for="name" string="Booking Reference"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- Section: Patient & Room -->
+                    <group string="Booking Details">
+                        <group string="Patient Information">
+                            <field name="customer_id"
+                                   string="Patient"
+                                   domain="[('is_patient', '=', True)]"
+                                   context="{'default_is_patient': True}"
+                                   readonly="state != 'draft'"/>
+                            <field name="contact_number" string="Phone"/>
+                            <field name="mobile_number" string="Mobile"/>
+                        </group>
+                        <group string="Room &amp; Schedule">
+                            <field name="room_id"
+                                   string="Treatment Room"
+                                   readonly="state != 'draft'"/>
+                            <field name="start_datetime"
+                                   string="Start Date / Time"
+                                   readonly="state != 'draft'"/>
+                            <field name="end_datetime"
+                                   string="End Date / Time"/>
+                            <field name="cleaning_minutes"
+                                   string="Cleaning Buffer (min)"/>
+                        </group>
+                    </group>
+
+                    <!-- Section: Services & Therapists -->
+                    <group string="Services &amp; Therapists">
+                        <group string="Services">
+                            <field name="service_ids"
+                                   widget="many2many_tags"
+                                   string="Services"
+                                   domain="[('active', '=', True)]"
+                                   readonly="state != 'draft'"
+                                   nolabel="1"/>
+                        </group>
+                        <group string="Therapists">
+                            <field name="therapist_ids"
+                                   widget="many2many_tags"
+                                   string="Assigned Therapists"
+                                   domain="[('is_therapist', '=', True)]"
+                                   context="{'default_is_therapist': True}"
+                                   readonly="state != 'draft'"
+                                   nolabel="1"/>
+                        </group>
+                    </group>
+
+                    <!-- Section: Financials -->
+                    <group string="Financial Summary">
+                        <group string="Pricing">
+                            <field name="amount_total"
+                                   string="Total Amount"
+                                   readonly="1"/>
+                            <field name="discount_percent"
+                                   string="Discount (%)"
+                                   readonly="state in ('done', 'cancelled') or payment_status != 'unpaid'"/>
+                            <field name="discounted_price"
+                                   string="Net Payable"
+                                   readonly="1"/>
+                        </group>
+                        <group string="Payment">
+                            <field name="paid_amount"
+                                   string="Amount Paid"
+                                   readonly="1"/>
+                            <field name="balance_amount"
+                                   string="Balance Due"
+                                   readonly="1"/>
+                            <field name="payment_status"
+                                   string="Payment Status"
+                                   readonly="1"/>
+                        </group>
+                    </group>
+
+                    <!-- Notes -->
+                    <group string="Internal Notes">
+                        <field name="notes"
+                               nolabel="1"
+                               placeholder="Add any relevant notes about this booking…"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         TREATMENT BOOKING PAYMENT — FORM VIEW
+    ================================================================ -->
+    <record id="view_treatment_booking_payment_form" model="ir.ui.view">
+        <field name="name">treatment.booking.payment.form</field>
+        <field name="model">treatment.booking.payment</field>
+        <field name="arch" type="xml">
+            <form string="Register Payment">
+                <sheet>
+                    <div class="oe_title">
+                        <h2>Receipt Payment</h2>
+                    </div>
+                    <group string="Payment Details">
+                        <group string="Booking Information">
+                            <field name="booking_id" invisible="1"/>
+                            <field name="customer_id" string="Patient" readonly="1"/>
+                            <field name="mobile_number" string="Mobile" readonly="1"/>
+                            <field name="date" string="Payment Date" readonly="1"/>
+                            <field name="journal_id"
+                                   string="Payment Method"
+                                   domain="[('type', 'in', ['cash', 'bank'])]"/>
+                        </group>
+                        <group string="Amount Breakdown">
+                            <field name="total_amount" string="Booking Total" readonly="1"/>
+                            <field name="discount_percent" string="Discount (%)"/>
+                            <field name="discounted_price" string="Net Payable" readonly="1"/>
+                            <field name="paid_amount" string="Amount to Pay"/>
+                            <field name="remaining_amount" string="Remaining After" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Post-Payment Action">
+                        <field name="payment_action" widget="radio" string="After Payment"/>
+                    </group>
+                    <footer>
+                        <button string="Register Payment"
+                                type="object"
+                                name="action_register_payment"
+                                class="btn-primary"/>
+                        <button string="Discard"
+                                special="cancel"
+                                class="btn-secondary"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         TREATMENT BOOKING — SEARCH VIEW
+    ================================================================ -->
+    <record id="view_treatment_booking_search" model="ir.ui.view">
+        <field name="name">treatment.booking.search</field>
+        <field name="model">treatment.booking</field>
+        <field name="arch" type="xml">
+            <search string="Search Bookings">
+                <field name="name" string="Booking #"/>
+                <field name="customer_id" string="Patient"/>
+                <field name="room_id" string="Room"/>
+                <field name="therapist_ids" string="Therapist"/>
+                <field name="service_ids" string="Service"/>
+
+                <filter string="Draft" name="filter_draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="filter_confirmed"
+                        domain="[('state', '=', 'confirmed')]"/>
+                <filter string="In Progress" name="filter_in_progress"
+                        domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Done" name="filter_done"
+                        domain="[('state', '=', 'done')]"/>
+                <filter string="Cancelled" name="filter_cancelled"
+                        domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter string="Unpaid" name="filter_unpaid"
+                        domain="[('payment_status', '=', 'unpaid')]"/>
+                <filter string="Partially Paid" name="filter_partial"
+                        domain="[('payment_status', '=', 'partial')]"/>
+                <filter string="Fully Paid" name="filter_paid"
+                        domain="[('payment_status', '=', 'paid')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Payment Status" name="group_payment_status"
+                            context="{'group_by': 'payment_status'}"/>
+                    <filter string="Room" name="group_room"
+                            context="{'group_by': 'room_id'}"/>
+                    <filter string="Patient" name="group_patient"
+                            context="{'group_by': 'customer_id'}"/>
+                    <filter string="Start Date" name="group_start_date"
+                            context="{'group_by': 'start_datetime:day'}"/>
+                    <filter string="Month" name="group_month"
+                            context="{'group_by': 'start_datetime:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         ACTION
+    ================================================================ -->
+    <record id="action_treatment_bookings" model="ir.actions.act_window">
+        <field name="name">Treatment Bookings</field>
+        <field name="res_model">treatment.booking</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_treatment_booking_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No treatment bookings yet!
+            </p>
+            <p>
+                Create your first booking from the Dashboard or click <b>New</b>.
+            </p>
+        </field>
+    </record>
+
 </odoo>

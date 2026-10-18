@@ -80,6 +80,7 @@ export class TreatmentRoomDashboard extends Component {
         return result;
     }
     bookingsFor(roomId) { return this.state.bookings.filter((b) => b.roomId === roomId); }
+    get isToday() { return this.state.date === dateKey(new Date()); }
     previousDay() { this.changeDate(-1); }
     nextDay() { this.changeDate(1); }
     today() { this.state.date = dateKey(new Date()); this.loadData(); }

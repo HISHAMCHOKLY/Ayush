@@ -1,6 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <record id="view_treatment_room_list" model="ir.ui.view"><field name="name">treatment.room.list</field><field name="model">treatment.room</field><field name="arch" type="xml"><list><field name="sequence" widget="handle"/><field name="name"/><field name="active"/></list></field></record>
-  <record id="view_treatment_room_form" model="ir.ui.view"><field name="name">treatment.room.form</field><field name="model">treatment.room</field><field name="arch" type="xml"><form><sheet><group><field name="name"/><field name="sequence"/><field name="active"/><field name="description"/></group></sheet></form></field></record>
-  <record id="action_treatment_rooms" model="ir.actions.act_window"><field name="name">Treatment Rooms</field><field name="res_model">treatment.room</field><field name="view_mode">list,form</field></record>
+
+    <!-- ================================================================
+         TREATMENT ROOM — LIST VIEW
+    ================================================================ -->
+    <record id="view_treatment_room_list" model="ir.ui.view">
+        <field name="name">treatment.room.list</field>
+        <field name="model">treatment.room</field>
+        <field name="arch" type="xml">
+            <list string="Treatment Rooms">
+                <field name="sequence" widget="handle"/>
+                <field name="name" string="Room Name"/>
+                <field name="description" string="Description" optional="show"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         TREATMENT ROOM — FORM VIEW
+    ================================================================ -->
+    <record id="view_treatment_room_form" model="ir.ui.view">
+        <field name="name">treatment.room.form</field>
+        <field name="model">treatment.room</field>
+        <field name="arch" type="xml">
+            <form string="Treatment Room">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Room Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Room A, Therapy Suite 1"/>
+                        </h1>
+                    </div>
+                    <group string="Room Details">
+                        <group>
+                            <field name="sequence" string="Display Order"/>
+                            <field name="active" string="Active"/>
+                        </group>
+                        <group>
+                            <field name="description"
+                                   string="Description"
+                                   placeholder="Optional notes about this room…"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         ACTION
+    ================================================================ -->
+    <record id="action_treatment_rooms" model="ir.actions.act_window">
+        <field name="name">Treatment Rooms</field>
+        <field name="res_model">treatment.room</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No treatment rooms configured yet!
+            </p>
+            <p>Add rooms to start scheduling bookings on the Dashboard.</p>
+        </field>
+    </record>
+
 </odoo>

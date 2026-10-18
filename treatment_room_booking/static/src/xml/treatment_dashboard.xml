@@ -15,7 +15,7 @@
       <div class="trb-toolbar">
         <div class="btn-group" role="group">
           <button class="btn btn-outline-secondary" t-on-click="previousDay" title="Previous day"><i class="fa fa-chevron-left"/></button>
-          <button class="btn btn-outline-secondary" t-on-click="today">Today</button>
+          <button class="btn" t-att-class="isToday ? 'btn-primary' : 'btn-outline-secondary'" t-on-click="today">Today</button>
           <button class="btn btn-outline-secondary" t-on-click="nextDay" title="Next day"><i class="fa fa-chevron-right"/></button>
         </div>
         <input class="form-control trb-date" type="date" t-att-value="state.date" t-on-change="onDateChange"/>

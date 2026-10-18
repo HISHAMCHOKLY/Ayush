@@ -1,6 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <record id="view_treatment_service_list" model="ir.ui.view"><field name="name">treatment.service.list</field><field name="model">treatment.service</field><field name="arch" type="xml"><list><field name="name"/><field name="duration_minutes"/><field name="cleaning_minutes"/><field name="price"/><field name="currency_id"/><field name="active"/></list></field></record>
-  <record id="view_treatment_service_form" model="ir.ui.view"><field name="name">treatment.service.form</field><field name="model">treatment.service</field><field name="arch" type="xml"><form><sheet><group><field name="name"/><field name="active"/><field name="duration_minutes"/><field name="cleaning_minutes"/><field name="price"/><field name="currency_id"/><field name="description"/></group><notebook><page string="Required Stock Products"><field name="consumable_line_ids"><list editable="bottom"><field name="sequence" widget="handle"/><field name="product_id"/><field name="quantity"/><field name="product_uom_id" readonly="1"/></list></field></page></notebook></sheet></form></field></record>
-  <record id="action_treatment_services" model="ir.actions.act_window"><field name="name">Treatments / Services</field><field name="res_model">treatment.service</field><field name="view_mode">list,form</field></record>
+
+    <!-- ================================================================
+         TREATMENT SERVICE — LIST VIEW
+    ================================================================ -->
+    <record id="view_treatment_service_list" model="ir.ui.view">
+        <field name="name">treatment.service.list</field>
+        <field name="model">treatment.service</field>
+        <field name="arch" type="xml">
+            <list string="Treatment Services">
+                <field name="name" string="Service Name"/>
+                <field name="duration_minutes" string="Duration (min)"/>
+                <field name="cleaning_minutes" string="Cleaning Buffer (min)" optional="show"/>
+                <field name="price" string="Price" sum="Total"/>
+                <field name="currency_id" string="Currency" optional="show"/>
+                <field name="active" widget="boolean_toggle" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         TREATMENT SERVICE — FORM VIEW
+    ================================================================ -->
+    <record id="view_treatment_service_form" model="ir.ui.view">
+        <field name="name">treatment.service.form</field>
+        <field name="model">treatment.service</field>
+        <field name="arch" type="xml">
+            <form string="Treatment Service">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Service Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Swedish Massage, Deep Tissue Therapy"/>
+                        </h1>
+                    </div>
+
+                    <group string="Service Details">
+                        <group string="Pricing &amp; Status">
+                            <field name="price" string="Price"/>
+                            <field name="currency_id" string="Currency"/>
+                            <field name="active" string="Active"/>
+                        </group>
+                        <group string="Timing">
+                            <field name="duration_minutes" string="Duration (min)"/>
+                            <field name="cleaning_minutes" string="Cleaning Buffer (min)"/>
+                        </group>
+                    </group>
+
+                    <group string="Description">
+                        <field name="description"
+                               nolabel="1"
+                               placeholder="Describe the treatment, procedures, or special instructions…"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Required Stock Products" name="consumables">
+                            <field name="consumable_line_ids">
+                                <list editable="bottom" string="Consumable Items">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id" string="Product"/>
+                                    <field name="quantity" string="Qty"/>
+                                    <field name="product_uom_id" string="Unit" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         ACTION
+    ================================================================ -->
+    <record id="action_treatment_services" model="ir.actions.act_window">
+        <field name="name">Treatments / Services</field>
+        <field name="res_model">treatment.service</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No treatment services defined yet!
+            </p>
+            <p>Add your first service to start creating bookings.</p>
+        </field>
+    </record>
+
 </odoo>
