@@ -43,8 +43,8 @@
   <!-- Menu: Therapists under Treatment root -->
   <menuitem id="menu_treatment_therapists"
             name="Therapists"
-            parent="treatment_room_booking.menu_treatment_root"
+            parent="treatment_room_booking.menu_treatment_operations"
             action="action_treatment_therapists"
-            sequence="4"
+            sequence="30"
             groups="base.group_user"/>
 </odoo>

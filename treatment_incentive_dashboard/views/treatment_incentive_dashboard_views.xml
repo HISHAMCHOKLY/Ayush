@@ -5,7 +5,7 @@
     </record>
 
     <menuitem id="menu_treatment_incentive_dashboard"
-              name="Incentive Dashboard"
+              name="Incentives"
               parent="treatment_employee_incentive.menu_treatment_incentive_root"
               action="action_treatment_incentive_dashboard"
               sequence="1"

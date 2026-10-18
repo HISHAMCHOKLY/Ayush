@@ -57,9 +57,9 @@
     </record>
     <menuitem id="menu_treatment_plan_purchases"
               name="Patient Plans"
-              parent="treatment_room_booking.menu_treatment_root"
+              parent="treatment_room_booking.menu_treatment_operations"
               action="action_treatment_plan_purchases"
-              sequence="4"
+              sequence="40"
               groups="base.group_user"/>
 
 </odoo>

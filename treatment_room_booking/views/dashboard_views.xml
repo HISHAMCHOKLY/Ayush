@@ -20,11 +20,17 @@
               sequence="1"
               groups="base.group_user"/>
 
+    <menuitem id="menu_treatment_operations"
+              name="Operations"
+              parent="menu_treatment_root"
+              sequence="10"
+              groups="base.group_user"/>
+
     <menuitem id="menu_treatment_bookings"
               name="Bookings"
-              parent="menu_treatment_root"
+              parent="menu_treatment_operations"
               action="action_treatment_bookings"
-              sequence="2"
+              sequence="10"
               groups="base.group_user"/>
 
     <!-- Patients menu is defined in patient_views.xml -->
@@ -33,7 +39,7 @@
     <menuitem id="menu_treatment_configuration"
               name="Configuration"
               parent="menu_treatment_root"
-              sequence="100"
+              sequence="30"
               groups="base.group_system"/>
 
     <menuitem id="menu_treatment_services"

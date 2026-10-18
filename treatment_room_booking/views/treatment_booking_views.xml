@@ -25,6 +25,7 @@
                        string="Therapists" optional="show"/>
                 <field name="start_datetime" string="Start" optional="show"/>
                 <field name="end_datetime" string="End" optional="show"/>
+                <field name="currency_id" string="Currency" optional="show"/>
                 <field name="amount_total" string="Total" sum="Grand Total" optional="show"/>
                 <field name="payment_status"
                        decoration-success="payment_status == 'paid'"
